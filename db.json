@@ -364,12 +364,13 @@
   "users": [
     {
       "fullname": "Hoàng Bảo",
-      "roleID": 1,
-      "username": "baohandsome",
+      "username": "admin",
       "email": "thaibaok4.1@gmail.com",
       "phone": "0852343047",
       "password": "123456",
       "password_confirmation": "123456",
+      "roleID": 1,
+      "imageUrl": "https://picsum.photos/id/407/300/300",
       "id": 1
     }
   ],

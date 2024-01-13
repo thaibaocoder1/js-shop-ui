@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/public/css/bootstrap/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="/public/css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="public/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/public/reset.css" rel="stylesheet" type="text/css" />
     <link href="/public/css/carousel/owl.carousel.css" rel="stylesheet" type="text/css" />
     <link href="/public/css/carousel/owl.theme.css" rel="stylesheet" type="text/css" />
     <link
@@ -14,19 +14,22 @@
       rel="stylesheet"
       type="text/css"
     />
-    <link href="public/style.css" rel="stylesheet" type="text/css" />
+    <link href="/public/style.css" rel="stylesheet" type="text/css" />
     <link href="public/responsive.css" rel="stylesheet" type="text/css" />
 
-    <script src="public/js/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <script src="/public/js/jquery-2.2.4.min.js" type="text/javascript"></script>
     <script
-      src="public/js/elevatezoom-master/jquery.elevatezoom.js"
+      src="/public/js/elevatezoom-master/jquery.elevatezoom.js"
       type="text/javascript"
     ></script>
-    <script src="public/js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
-    <script src="public/js/carousel/owl.carousel.js" type="text/javascript"></script>
-    <script src="public/js/app.js" type="text/javascript"></script>
+    <script src="/public/js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/public/js/carousel/owl.carousel.js" type="text/javascript"></script>
+    <script src="/public/js/app.js" type="text/javascript"></script>
   </head>
   <body>
+    <!-- spinner -->
+    <div class="spinner"></div>
+
     <!-- common header -->
     <div id="site">
       <div id="container">
@@ -75,47 +78,26 @@
                 </div>
                 <a href="/cart.html" title="Giỏ hàng" id="cart-respon-wp" class="fl-right">
                   <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                  <span id="num">2</span>
+                  <span id="num">0</span>
                 </a>
                 <div id="cart-wp" class="fl-right">
                   <div id="btn-cart">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                    <span id="num">2</span>
+                    <span id="num" class="numDesktop">0</span>
                   </div>
                   <div id="dropdown">
-                    <p class="desc">Có <span>2 sản phẩm</span> trong giỏ hàng</p>
-                    <ul class="list-cart">
-                      <li class="clearfix">
-                        <a href="" title="" class="thumb fl-left">
-                          <img src="public/images/img-pro-11.png" alt="" />
-                        </a>
-                        <div class="info fl-right">
-                          <a href="" title="" class="product-name">Sony Express X6</a>
-                          <p class="price">6.250.000đ</p>
-                          <p class="qty">Số lượng: <span>1</span></p>
-                        </div>
-                      </li>
-                      <li class="clearfix">
-                        <a href="" title="" class="thumb fl-left">
-                          <img src="public/images/img-pro-23.png" alt="" />
-                        </a>
-                        <div class="info fl-right">
-                          <a href="" title="" class="product-name">Laptop Lenovo 10</a>
-                          <p class="price">16.250.000đ</p>
-                          <p class="qty">Số lượng: <span>1</span></p>
-                        </div>
-                      </li>
-                    </ul>
+                    <p class="desc" id="numOrder">Có <span>0 sản phẩm</span> trong giỏ hàng</p>
+                    <ul class="list-cart" id="listCart"></ul>
                     <div class="total-price clearfix">
                       <p class="title fl-left">Tổng:</p>
-                      <p class="price fl-right">18.500.000đ</p>
+                      <p class="price fl-right" id="totalPrice">0đ</p>
                     </div>
-                    <dic class="action-cart clearfix">
-                      <a href="/index.html" title="Giỏ hàng" class="view-cart fl-left">Giỏ hàng</a>
-                      <a href="/checkout.html" title="Thanh toán" class="checkout fl-right"
-                        >Thanh toán</a
-                      >
-                    </dic>
+                    <div class="action-cart clearfix">
+                      <a href="/cart.html" title="Giỏ hàng" class="view-cart fl-left">Giỏ hàng</a>
+                      <a href="/checkout.html" title="Thanh toán" class="checkout fl-right">
+                        Thanh toán
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -128,14 +110,43 @@
     <!-- main -->
     <div id="main-content-wp" class="home-page clearfix">
       <div class="wp-inner">
-        <div class="main-content fl-right"></div>
+        <div class="main-content fl-right">
+          <section class="users">
+            <div class="users-box">
+              <div class="user-left" id="userInfo">
+                <div class="input-group">
+                  <label for="fullname">Họ và tên</label>
+                  <input type="text" name="fullname" id="fullname" disabled />
+                </div>
+                <div class="input-group">
+                  <label for="username">Tên đăng nhập</label>
+                  <input type="text" name="username" id="username" disabled />
+                </div>
+                <div class="input-group">
+                  <label for="email">Email</label>
+                  <input type="text" name="email" id="email" disabled />
+                </div>
+                <div class="input-group">
+                  <label for="phone">Số điện thoại</label>
+                  <input type="text" name="phone" id="phone" disabled />
+                </div>
+              </div>
+              <div class="user-right" id="userAvatar">
+                <div class="input-group">
+                  <label for="avatar">Ảnh đại diện</label>
+                  <img src="https://placehold.co/300x300" id="avatar" alt="" sizes="" srcset="" />
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
         <div class="sidebar fl-left">
           <div class="section" id="category-product-wp">
             <div class="section-head">
               <h3 class="section-title">Thông tin khách hàng</h3>
             </div>
             <div class="secion-detail">
-              <ul class="list-item">
+              <ul class="list-item" id="accountUser">
                 <li>
                   <a href="/login.html" title="Đăng nhập">Đăng nhập</a>
                 </li>
@@ -274,6 +285,6 @@
         fjs.parentNode.insertBefore(js, fjs)
       })(document, 'script', 'facebook-jssdk')
     </script>
-    <script type="module" src="/js/home.js"></script>
+    <script type="module" src="/js/account.js"></script>
   </body>
 </html>

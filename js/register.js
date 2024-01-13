@@ -1,23 +1,41 @@
 import userApi from './api/userApi'
-import { toast } from './utils'
+import { toast, getRandomImage, showSpinner, hideSpinner } from './utils'
 async function handleOnSubmitForm(data) {
+  if (data) {
+    data['roleID'] = 1
+    data['imageUrl'] = getRandomImage()
+  }
   try {
+    showSpinner()
     const listUser = await userApi.getAll()
-    listUser.forEach(async (user) => {
-      if (user.email === data.email || user.username === data.username) {
-        toast.error('Duplicate user. Please check again')
-      } else {
-        const infoUser = await userApi.add(data)
-        if (infoUser) {
-          toast.success('Register successfully')
-          setTimeout(() => {
-            window.location.assign('/login.html')
-          }, 2000)
+    hideSpinner()
+    if (Array.isArray(listUser) && listUser.length > 0) {
+      listUser.forEach(async (user) => {
+        if (user.email === data.email) {
+          toast.error('Duplicate user. Please check again')
         } else {
-          toast.error('Register failed')
+          const infoUser = await userApi.add(data)
+          if (infoUser) {
+            toast.success('Register successfully')
+            setTimeout(() => {
+              window.location.assign('/login.html')
+            }, 2000)
+          } else {
+            toast.error('Register failed')
+          }
         }
+      })
+    } else {
+      const infoUser = await userApi.add(data)
+      if (infoUser) {
+        toast.success('Register successfully')
+        setTimeout(() => {
+          window.location.assign('/login.html')
+        }, 2000)
+      } else {
+        toast.error('Register failed')
       }
-    })
+    }
   } catch (error) {
     console.log('error', error)
   }

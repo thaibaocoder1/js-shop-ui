@@ -36,9 +36,12 @@ function Validator(options) {
   }
   const formElement = document.querySelector(options.formID)
   if (formElement) {
-    formElement.addEventListener('submit', function (e) {
+    let submitting = false
+    formElement.addEventListener('submit', async function (e) {
       e.preventDefault()
+      if (submitting) return
       let isFormValid = true
+      // customs: add keyword async/await, create a variable to check submit
       options.rules.forEach((rule) => {
         const inputElement = formElement.querySelector(rule.selector)
         const isValid = validate(inputElement, rule)
@@ -46,6 +49,7 @@ function Validator(options) {
       })
       if (isFormValid) {
         if (typeof options.onSubmit === 'function') {
+          submitting = true
           const enableInputs = formElement.querySelectorAll('[name]:not([disabled])')
           const formValues = [...enableInputs].reduce((values, input) => {
             switch (input.type) {
@@ -70,10 +74,10 @@ function Validator(options) {
               default:
                 values[input.name] = input.value
             }
-            values['roleID'] = 1
             return values
           }, {})
-          options.onSubmit(formValues)
+          await options.onSubmit(formValues)
+          submitting = false
         } else {
           formElement.submit()
         }

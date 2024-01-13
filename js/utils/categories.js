@@ -1,6 +1,7 @@
 import productApi from '../api/productsApi'
 import categoryApi from '../api/categoryApi'
 import { formatCurrencyNumber } from './format'
+import { showSpinner, hideSpinner } from './spinner'
 export async function renderListCategory(selector) {
   const ulElement = document.querySelector(selector)
   if (!ulElement) return
@@ -16,13 +17,21 @@ export async function renderListCategory(selector) {
     })
   }
 }
-export async function renderListProductWithCateID({ selector, productHeading, categoryID }) {
+export async function renderListProductWithCateID({
+  selector,
+  selectorCount,
+  productHeading,
+  categoryID,
+}) {
   const ulElement = document.querySelector(selector)
+  const countProductEl = document.querySelector(selectorCount)
   const productHeadingEl = document.querySelector(productHeading)
-  if (!ulElement || !productHeadingEl) return
+  if (!ulElement || !productHeadingEl || !countProductEl) return
   try {
+    showSpinner()
     const data = await productApi.getAll()
     const categories = await categoryApi.getAll()
+    hideSpinner()
     categories.forEach((category) => {
       if (Number.parseInt(category.id) === categoryID) {
         productHeadingEl.innerText = category.title
@@ -46,6 +55,7 @@ export async function renderListProductWithCateID({ selector, productHeading, ca
       </div>`
         ulElement.appendChild(liElement)
       })
+      countProductEl.innerHTML = `Hiển thị ${listProductApply.length} trên ${data.length} sản phẩm`
     }
   } catch (error) {
     console.log('not data to display', error)

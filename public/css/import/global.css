@@ -1,6 +1,6 @@
 /*GLOBAL*/
 body {
-  font-family: "Roboto Regular";
+  font-family: 'Roboto Regular';
   font-size: 14px;
   line-height: normal;
   color: #272727;
@@ -9,6 +9,10 @@ body {
 .wp-inner {
   width: 1170px;
   margin: 0px auto;
+}
+.wp-inner.wp-inner--checkout {
+  display: flex;
+  justify-content: space-between;
 }
 img {
   max-width: 100%;
@@ -52,7 +56,7 @@ a {
 .dropdown-menu > li > a {
   padding: 5px 20px;
   color: #2b2b2b;
-  font-family: "Roboto Regular";
+  font-family: 'Roboto Regular';
 }
 .table-responsive {
   overflow-x: inherit;
@@ -123,8 +127,8 @@ iframe {
 #feature-product-wp .owl-controls .owl-buttons div:before,
 #same-category-wp .owl-controls .owl-buttons div:before {
   position: absolute;
-  content: "\f104";
-  font-family: "Fontawesome";
+  content: '\f104';
+  font-family: 'Fontawesome';
   color: #333;
   top: 50%;
   left: 50%;
@@ -136,7 +140,7 @@ iframe {
 }
 #feature-product-wp .owl-controls .owl-buttons div.owl-next:before,
 #same-category-wp .owl-controls .owl-buttons div.owl-next:before {
-  content: "\f105";
+  content: '\f105';
 }
 #feature-product-wp .owl-controls .owl-buttons div.owl-next,
 #same-category-wp .owl-controls .owl-buttons div.owl-next {
@@ -146,3 +150,4 @@ iframe {
 #same-category-wp .owl-controls .owl-buttons div.owl-prev {
   right: 25px;
 }
+/* spinner */

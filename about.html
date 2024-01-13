@@ -29,6 +29,7 @@
   <body>
     <!-- spinner -->
     <div class="spinner"></div>
+
     <!-- common header -->
     <div id="site">
       <div id="container">
@@ -107,64 +108,34 @@
     </div>
 
     <!-- main -->
-    <div id="main-content-wp" class="cart-page">
-      <div class="section" id="breadcrumb-wp">
-        <div class="wp-inner">
-          <div class="section-detail">
-            <ul class="list-item clearfix">
-              <li>
-                <a href="/index.html" title="Trang chủ">Trang chủ</a>
-              </li>
-              <li>
-                <a href="/cart.html" title="Giỏ hàng">Giỏ hàng</a>
-              </li>
-            </ul>
-          </div>
+    <div id="main-content-wp" class="home-page clearfix">
+      <div class="wp-inner">
+        <div class="main-content fl-right">
+          <h2>Trang giới thiệu</h2>
         </div>
-      </div>
-      <div id="wrapper" class="wp-inner clearfix">
-        <div class="section" id="info-cart-wp">
-          <div class="section-detail table-responsive">
-            <table class="table" id="tableCart">
-              <thead>
-                <tr>
-                  <td>Lựa chọn</td>
-                  <td>Mã sản phẩm</td>
-                  <td>Ảnh sản phẩm</td>
-                  <td>Tên sản phẩm</td>
-                  <td>Giá sản phẩm</td>
-                  <td>Số lượng</td>
-                  <td colspan="2">Thành tiền</td>
-                </tr>
-              </thead>
-              <tbody></tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="8">
-                    <div class="clearfix">
-                      <p id="total-price" class="total-price fl-right">
-                        Tổng thanh toán: <span>0đ</span>
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="8">
-                    <div class="clearfix">
-                      <div class="fl-right">
-                        <a href="/checkout.html" title="" id="checkout-cart">Thanh toán</a>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
+        <div class="sidebar fl-left">
+          <div class="section" id="category-product-wp">
+            <div class="section-head">
+              <h3 class="section-title">Danh mục sản phẩm</h3>
+            </div>
+            <div class="secion-detail">
+              <ul class="list-item" id="listCategory"></ul>
+            </div>
           </div>
-        </div>
-        <div class="section" id="action-cart-wp">
-          <div class="section-detail.section-detail--cart">
-            <button class="btn btn-primary" id="btn-buy-product">Mua tiếp</button>
-            <button class="btn btn-warning" id="btn-remove-product">Xoá giỏ hàng</button>
+          <div class="section" id="selling-wp">
+            <div class="section-head">
+              <h3 class="section-title">Sản phẩm bán chạy</h3>
+            </div>
+            <div class="section-detail">
+              <ul class="list-item" id="listItemSeller"></ul>
+            </div>
+          </div>
+          <div class="section" id="banner-wp">
+            <div class="section-detail">
+              <a href="" title="" class="thumb">
+                <img src="public/images/logo.png" alt="" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -295,6 +266,6 @@
         fjs.parentNode.insertBefore(js, fjs)
       })(document, 'script', 'facebook-jssdk')
     </script>
-    <script type="module" src="/js/cart.js"></script>
+    <script type="module" src="/js/home.js"></script>
   </body>
 </html>

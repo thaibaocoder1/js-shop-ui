@@ -97,6 +97,29 @@ async function renderListProductWithName({ idElement, tagName }) {
           window.location.assign('/login.html')
         }, 2000)
       }
+    } else if (target.matches('.buy-now')) {
+      e.preventDefault()
+      const infoUserStorage = localStorage.getItem('user_info')
+      if (infoUserStorage) {
+        const productID = +target.parentElement.parentElement.dataset.id
+        if (productID) {
+          cart = addProductToCart(productID, cart, infoUserStorage)
+          // set status buy now for product if user click buy now button in ui
+          for (const item of cart) {
+            if (+item.productID === productID) {
+              item['isBuyNow'] = true
+              item['isChecked'] = true
+            }
+          }
+          localStorage.setItem('cart', JSON.stringify(cart))
+          window.location.assign('/checkout.html')
+        }
+      } else {
+        toast.error('Please login to add product')
+        setTimeout(() => {
+          window.location.assign('/login.html')
+        }, 2000)
+      }
     }
   })
 })()

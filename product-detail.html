@@ -83,20 +83,23 @@
                 <div id="cart-wp" class="fl-right">
                   <div id="btn-cart">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                    <span id="num">0</span>
+                    <span id="num" class="numDesktop">0</span>
                   </div>
                   <div id="dropdown">
-                    <p class="desc">Có <span>0 sản phẩm</span> trong giỏ hàng</p>
-                    <ul class="list-cart"></ul>
+                    <p class="desc" id="numOrder">Có <span>0 sản phẩm</span> trong giỏ hàng</p>
+                    <ul class="list-cart" id="listCart"></ul>
                     <div class="total-price clearfix">
                       <p class="title fl-left">Tổng:</p>
-                      <p class="price fl-right">18.500.000đ</p>
+                      <p class="price fl-right" id="totalPrice">0đ</p>
                     </div>
-                    <div class="action-cart clearfix">
-                      <a href="/index.html" title="Giỏ hàng" class="view-cart fl-left">Giỏ hàng</a>
-                      <a href="/checkout.html" title="Thanh toán" class="checkout fl-right">
-                        Thanh toán
-                      </a>
+                    <div
+                      class="action-cart clearfix"
+                      style="display: flex; justify-content: space-between; align-items: center"
+                    >
+                      <p id="numOrderText" style="color: #333; margin-right: 4px">Có 3 sản phẩm</p>
+                      <a href="/cart.html" title="Giỏ hàng" class="checkout fl-left"
+                        >Xem giỏ hàng</a
+                      >
                     </div>
                   </div>
                 </div>
@@ -129,12 +132,8 @@
           <div class="section" id="detail-product-wp">
             <div class="section-detail clearfix">
               <div class="thumb-wp fl-left" id="infoProductLeft">
-                <a href="" title="" id="main-thumb">
-                  <img
-                    id="zoom"
-                    src="https://media3.scdn.vn/img2/2017/10_30/sxlpFs_simg_ab1f47_350x350_maxb.jpg"
-                    data-zoom-image="https://media3.scdn.vn/img2/2017/10_30/sxlpFs_simg_70aaf2_700x700_maxb.jpg"
-                  />
+                <a href="" title="" id="main-thumb" style="height: 340px; display: block">
+                  <img id="zoom" src="https://placehold.co/350x350" data-zoom-image="" />
                 </a>
                 <div id="list-thumb">
                   <a

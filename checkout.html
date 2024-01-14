@@ -92,11 +92,14 @@
                       <p class="title fl-left">Tổng:</p>
                       <p class="price fl-right" id="totalPrice">0đ</p>
                     </div>
-                    <div class="action-cart clearfix">
-                      <a href="/cart.html" title="Giỏ hàng" class="view-cart fl-left">Giỏ hàng</a>
-                      <a href="/checkout.html" title="Thanh toán" class="checkout fl-right">
-                        Thanh toán
-                      </a>
+                    <div
+                      class="action-cart clearfix"
+                      style="display: flex; justify-content: space-between; align-items: center"
+                    >
+                      <p id="numOrderText" style="color: #333; margin-right: 4px">Có 3 sản phẩm</p>
+                      <a href="/cart.html" title="Giỏ hàng" class="checkout fl-left"
+                        >Xem giỏ hàng</a
+                      >
                     </div>
                   </div>
                 </div>
@@ -173,31 +176,36 @@
             <h1 class="section-title">Thông tin khách hàng</h1>
           </div>
           <div class="section-detail">
-            <form action="" name="form-checkout" id="formCheckout">
+            <form action="" name="form-checkout" id="formCheckout" novalidate>
               <div class="form-row clearfix">
                 <div class="form-col fl-left">
                   <label for="fullname">Họ tên</label>
                   <input type="text" name="fullname" id="fullname" />
+                  <span class="invalid-feedback"></span>
                 </div>
                 <div class="form-col fl-right">
                   <label for="email">Email</label>
                   <input type="email" name="email" id="email" />
+                  <span class="invalid-feedback"></span>
                 </div>
               </div>
               <div class="form-row clearfix">
                 <div class="form-col fl-left">
                   <label for="address">Địa chỉ</label>
                   <input type="text" name="address" id="address" />
+                  <span class="invalid-feedback"></span>
                 </div>
                 <div class="form-col fl-right">
                   <label for="phone">Số điện thoại</label>
                   <input type="tel" name="phone" id="phone" />
+                  <span class="invalid-feedback"></span>
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-col">
                   <label for="notes">Ghi chú</label>
                   <textarea name="note"></textarea>
+                  <span class="invalid-feedback"></span>
                 </div>
               </div>
               <div class="form-row" style="display: flex; justify-content: flex-end">

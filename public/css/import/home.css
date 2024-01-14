@@ -291,6 +291,13 @@
   border: 1px solid transparent;
   text-align: center;
 }
+.swiper-slide--custom img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
 .swiper-slide--custom .product-name {
   display: block;
   text-align: center;

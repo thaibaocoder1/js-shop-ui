@@ -1,5 +1,6 @@
 import userApi from '../api/userApi'
-import { setFieldValue } from './common'
+import { setFieldValue, setTextContent } from './common'
+import * as yup from 'yup'
 function setValuesForm(formCheckout, user) {
   setFieldValue(formCheckout, "input[name='fullname']", user?.fullname)
   setFieldValue(formCheckout, "input[name='email']", user?.email)
@@ -13,15 +14,63 @@ function getValuesForm(formCheckout) {
   }
   return formValues
 }
-export async function initFormCheckout({ idForm, infoUserStorage, onSubmit }) {
+function getCheckoutSchema() {
+  return yup.object({
+    fullname: yup.string().required('Phải nhập tên đầy dủ'),
+    email: yup
+      .string()
+      .required('Không được để trống trường này')
+      .email('Trường này phải là email'),
+    address: yup.string().required('Không được để trống trường này'),
+    phone: yup
+      .string()
+      .required('Không được để trống trường này')
+      .matches(/^[0-9]{10}$/, 'Số điện thoại không hợp lệ')
+      .typeError('Trường này chỉ nhập số'),
+    note: yup.string(),
+  })
+}
+function setFieldError(form, name, error) {
+  const element = form.querySelector(`input[name='${name}']`)
+  if (element) {
+    element.setCustomValidity(error)
+    setTextContent(element.parentElement, '.invalid-feedback', error)
+  }
+}
+async function validateCheckoutForm(formCheckout, formValues) {
+  try {
+    ;['fullname', 'email', 'address', 'phone', 'note'].forEach((name) =>
+      setFieldError(formCheckout, name, ''),
+    )
+    const schema = getCheckoutSchema()
+    await schema.validate(formValues, {
+      abortEarly: false,
+    })
+  } catch (error) {
+    const errorLog = {}
+    for (const validationError of error.inner) {
+      const name = validationError.path
+      if (errorLog[name]) continue
+      setFieldError(formCheckout, name, validationError.message)
+      errorLog[name] = true
+    }
+  }
+  const isValid = formCheckout.checkValidity()
+  if (!isValid) formCheckout.classList.add('was-validated')
+  return isValid
+}
+export async function initFormCheckout({ idForm, cart, infoUserStorage, onSubmit }) {
   const formCheckout = document.querySelector(idForm)
   if (!formCheckout) return
   if (infoUserStorage) {
     const user = await userApi.getById(infoUserStorage.user_id)
     setValuesForm(formCheckout, user)
-    formCheckout.addEventListener('submit', function (e) {
+    formCheckout.addEventListener('submit', async function (e) {
       e.preventDefault()
       const formValues = getValuesForm(formCheckout)
+      const isValid = await validateCheckoutForm(formCheckout, formValues)
+      if (!isValid) return
+      onSubmit?.(formValues, infoUserStorage.user_id, cart)
     })
   }
 }

@@ -13,6 +13,7 @@ export async function renderListProductSeller(selector) {
     if (Array.isArray(listProductApply) && listProductApply.length > 0) {
       listProductApply.forEach((item) => {
         const liElement = document.createElement('li')
+        liElement.dataset.id = item.id
         liElement.classList.add('clearfix')
         liElement.innerHTML = `<a href="/product-detail.html?id=${
           item.id

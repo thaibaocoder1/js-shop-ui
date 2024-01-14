@@ -171,3 +171,6 @@ button#order-now {
   font-size: 15px;
   font-family: inherit;
 }
+.invalid-feedback {
+  color: #bf2424;
+}

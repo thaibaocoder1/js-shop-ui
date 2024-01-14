@@ -11,7 +11,6 @@ export const toast = {
       style: {
         background: 'linear-gradient(to right, #00b09b, #96c93d)',
         fontSize: '18px',
-        minminWidth: '180px',
       },
     }).showToast()
   },
@@ -25,7 +24,6 @@ export const toast = {
       style: {
         background: '#03a9f4',
         fontSize: '18px',
-        minWidth: '180px',
       },
     }).showToast()
   },
@@ -39,7 +37,6 @@ export const toast = {
       style: {
         background: '#d32f2f',
         fontSize: '18px',
-        minWidth: '180px',
       },
     }).showToast()
   },

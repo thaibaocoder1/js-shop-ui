@@ -4,6 +4,12 @@ export function setFieldValue(parentElement, selector, value) {
   if (element) element.value = value
   return element
 }
+export function setTextContent(parentElement, selector, text) {
+  if (!parentElement) return
+  const element = parentElement.querySelector(selector)
+  if (element) element.textContent = text
+  return element
+}
 export function setBackgroundImage(parentElement, selector, imageUrl) {
   if (!parentElement) return
   const element = parentElement.querySelector(selector)

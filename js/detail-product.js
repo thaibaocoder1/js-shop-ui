@@ -1,10 +1,15 @@
 import productApi from './api/productsApi'
 import {
+  addCartToDom,
+  addProductToCart,
   formatCurrencyNumber,
+  handleChangeQuantity,
   hideSpinner,
   initSwiper,
   renderListCategory,
   showSpinner,
+  sweetAlert,
+  toast,
 } from './utils'
 
 async function renderDetailProduct({
@@ -23,6 +28,11 @@ async function renderDetailProduct({
     showSpinner()
     const data = await productApi.getById(productID)
     hideSpinner()
+    const mainImg = infoProductLeft.querySelector('#zoom')
+    if (!mainImg) return
+    mainImg.src = `/public/images/${data.thumb}`
+    mainImg.setAttribute('data-zoom-image', `public/images/${data.thumb}`)
+    mainImg.style = `width: 340px; height: 340px; display: block; object-fit: contain;`
     breadcrumbTitleEl.innerText = data.name
     infoProductRight.innerHTML = `<h3 class="product-name">${data.name}</h3>
     <div class="desc">
@@ -40,11 +50,13 @@ async function renderDetailProduct({
     </div>
     <p class="price">${formatCurrencyNumber(data.discount)}</p>
     <div id="num-order-wp">
-      <a title="" id="minus"><i class="fa fa-minus"></i></a>
-      <input type="text" name="num-order" value="1" id="num-order" />
-      <a title="" id="plus"><i class="fa fa-plus"></i></a>
+      <span id="minus"><i class="fa fa-minus"></i></span>
+      <input type="text" value="1" name="num-order" id="num-order" />
+      <span id="plus"><i class="fa fa-plus"></i></span>
     </div>
-    <a href="/cart.html" title="Thêm giỏ hàng" class="add-cart">Thêm giỏ hàng</a>`
+    <a href="/cart.html" data-id=${
+      data.id
+    } title="Thêm giỏ hàng" class="add-cart">Thêm giỏ hàng</a>`
     infoProductDesc.innerHTML = `<p>${data.description}</p>`
     // fetch list product same category
     await renderListProductSameCategory({
@@ -94,6 +106,16 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
 }
 // main
 ;(() => {
+  let cart = localStorage.getItem('cart') !== null ? JSON.parse(localStorage.getItem('cart')) : []
+  if (Array.isArray(cart) && cart.length > 0) {
+    addCartToDom({
+      idListCart: 'listCart',
+      cart,
+      idNumOrder: 'numOrder',
+      idNum: '#num.numDesktop',
+      idTotalPrice: 'totalPrice',
+    })
+  }
   renderListCategory('#listCategory')
   const searchParams = new URLSearchParams(location.search)
   const productID = Number.parseInt(searchParams.get('id'))
@@ -104,5 +126,49 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
     boxIDDesc: 'infoProductDesc',
     breadcrumbTitle: 'breadcrumb-title',
     productID,
+  })
+  // event delegations
+  document.addEventListener('click', async function (e) {
+    const { target } = e
+    if (target.matches('.add-cart')) {
+      e.preventDefault()
+      const infoUserStorage = localStorage.getItem('user_info')
+      if (infoUserStorage) {
+        const productID = +target.dataset.id
+        if (productID) {
+          sweetAlert.success('Tuyệt vời!')
+          cart = addProductToCart(productID, cart, infoUserStorage)
+        }
+      } else {
+        toast.error('Please login to add product')
+        setTimeout(() => {
+          window.location.assign('/login.html')
+        }, 2000)
+      }
+    } else if (target.closest('#minus')) {
+      const parent = target.closest('#num-order-wp')
+      if (!parent) return
+      const numOrderDetail = parent.querySelector('#num-order')
+      if (+numOrderDetail.value <= 1) {
+        toast.error('Số lượng tối thiểu là 1')
+      } else {
+        numOrderDetail.value--
+      }
+    } else if (target.closest('#plus')) {
+      const parent = target.closest('#num-order-wp')
+      if (!parent) return
+      const numOrderDetail = parent.querySelector('#num-order')
+      if (+numOrderDetail.value >= 1) {
+        numOrderDetail.value++
+      }
+      cart = handleChangeQuantity(+numOrderDetail.value, cart, productID)
+      await addCartToDom({
+        idListCart: 'listCart',
+        cart,
+        idNumOrder: 'numOrder',
+        idNum: '#num.numDesktop',
+        idTotalPrice: 'totalPrice',
+      })
+    }
   })
 })()

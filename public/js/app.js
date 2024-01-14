@@ -20,7 +20,11 @@ $(document).ready(function () {
     cursor: 'pointer',
     galleryActiveClass: 'active',
     imageCrossfade: true,
-    loadingIcon: 'http://www.elevateweb.co.uk/spinner.gif',
+    zoomWindowFadeIn: 300,
+    zoomWindowFadeOut: 300,
+    lensFadeIn: 300,
+    lensFadeOut: 300,
+    scrollZoom: true,
   })
 
   // const featureProduct = $('#feature-product-wp .list-item#listItemFeatures')

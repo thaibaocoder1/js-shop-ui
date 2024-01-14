@@ -57,28 +57,8 @@
       "productID": "1"
     }
   ],
-  "order": [
-    {
-      "id": "1",
-      "userID": "1",
-      "fullname": "1",
-      "email": "1",
-      "phoneNumber": "1",
-      "address": "1",
-      "note": "1",
-      "orderDate": "1",
-      "orderStatus": "1"
-    }
-  ],
-  "orderDetails": [
-    {
-      "id": "1",
-      "orderID": "1",
-      "productID": "1",
-      "price": "1",
-      "quantity": "1"
-    }
-  ],
+  "order": [],
+  "orderDetails": [],
   "products": [
     {
       "id": "1",

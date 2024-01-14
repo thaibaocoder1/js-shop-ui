@@ -66,6 +66,12 @@ export function addProductToCart(productID, cart, infoUserStorage) {
   addCartToStorage(cart)
   return cart
 }
+export function handleChangeQuantity(inputValue, cart, productID) {
+  const index = cart.findIndex((item) => +item.productID === productID)
+  if (index >= 0) cart[index].quantity = inputValue
+  addCartToStorage(cart)
+  return cart
+}
 export function addCartToStorage(cartCopy) {
   localStorage.setItem('cart', JSON.stringify(cartCopy))
 }

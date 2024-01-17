@@ -1,5 +1,6 @@
 import userApi from './api/userApi'
 import {
+  addCartToDom,
   hideSpinner,
   initUserForm,
   setBackgroundImage,
@@ -36,7 +37,7 @@ async function renderInfoAccount({ idElement, infoUserStorage, divInfoLeft, divI
   const divInfoLeftEl = document.getElementById(divInfoLeft)
   const userAvatarEl = document.getElementById(divInfoRight)
   if (!ulElement || !divInfoLeftEl || !userAvatarEl) return
-  if (infoUserStorage) {
+  if (infoUserStorage.access_token) {
     displayTagLink(ulElement)
     displayInfoUser(infoUserStorage.user_id, divInfoLeftEl, userAvatarEl)
   } else {
@@ -71,9 +72,25 @@ function handleOnClick() {
 }
 // main
 ;(() => {
-  let infoUserStorage
-  if (localStorage.getItem('user_info') !== null) {
-    infoUserStorage = JSON.parse(localStorage.getItem('user_info'))
+  // get cart from localStorage
+  let cart = localStorage.getItem('cart') !== null ? JSON.parse(localStorage.getItem('cart')) : []
+  let infoUserStorage =
+    localStorage.getItem('user_info') !== null ? JSON.parse(localStorage.getItem('user_info')) : []
+  let isCartAdded = false
+  if (Array.isArray(cart) && cart.length > 0) {
+    cart.forEach((item) => {
+      if (item.userID === infoUserStorage.user_id && !isCartAdded) {
+        addCartToDom({
+          idListCart: 'listCart',
+          cart,
+          userID: infoUserStorage.user_id,
+          idNumOrder: 'numOrder',
+          idNum: '#num.numDesktop',
+          idTotalPrice: 'totalPrice',
+        })
+        isCartAdded = true
+      }
+    })
   }
   renderInfoAccount({
     idElement: 'accountUser',

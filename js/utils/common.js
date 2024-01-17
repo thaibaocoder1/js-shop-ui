@@ -10,6 +10,13 @@ export function setTextContent(parentElement, selector, text) {
   if (element) element.textContent = text
   return element
 }
+export function setFieldError(form, name, error) {
+  const element = form.querySelector(`input[name='${name}']`)
+  if (element) {
+    element.setCustomValidity(error)
+    setTextContent(element.parentElement, '.invalid-feedback', error)
+  }
+}
 export function setBackgroundImage(parentElement, selector, imageUrl) {
   if (!parentElement) return
   const element = parentElement.querySelector(selector)

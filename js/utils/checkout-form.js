@@ -1,5 +1,5 @@
 import userApi from '../api/userApi'
-import { setFieldValue, setTextContent } from './common'
+import { setFieldError, setFieldValue } from './common'
 import * as yup from 'yup'
 function setValuesForm(formCheckout, user) {
   setFieldValue(formCheckout, "input[name='fullname']", user?.fullname)
@@ -29,13 +29,6 @@ function getCheckoutSchema() {
       .typeError('Trường này chỉ nhập số'),
     note: yup.string(),
   })
-}
-function setFieldError(form, name, error) {
-  const element = form.querySelector(`input[name='${name}']`)
-  if (element) {
-    element.setCustomValidity(error)
-    setTextContent(element.parentElement, '.invalid-feedback', error)
-  }
 }
 async function validateCheckoutForm(formCheckout, formValues) {
   try {

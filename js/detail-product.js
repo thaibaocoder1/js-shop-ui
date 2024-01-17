@@ -3,7 +3,6 @@ import {
   addCartToDom,
   addProductToCart,
   formatCurrencyNumber,
-  handleChangeQuantity,
   hideSpinner,
   initSwiper,
   renderListCategory,
@@ -41,22 +40,30 @@ async function renderDetailProduct({
     <div class="num-product">
       <span class="title">Sản phẩm: </span>
       <span class="status">${
-        Number.parseInt(data.status) === 1
-          ? 'Còn hàng'
-          : Number.parseInt(data.status) === 1
+        Number.parseInt(data.quantity) === 0 && Number.parseInt(data.status) === 0
           ? 'Ngưng bán'
-          : 'Hết hàng'
+          : Number.parseInt(data.quantity) === 0 && Number.parseInt(data.status) === 1
+          ? 'Đợi nhập hàng'
+          : Number.parseInt(data.quantity) <= 20 && Number.parseInt(data.status) === 1
+          ? 'Sắp hết hàng'
+          : 'Còn hàng'
       }</span>
     </div>
-    <p class="price">${formatCurrencyNumber(data.discount)}</p>
+    <p class="price">${formatCurrencyNumber(
+      (data.price * (100 - Number.parseInt(data.discount))) / 100,
+    )}</p>
     <div id="num-order-wp">
       <span id="minus"><i class="fa fa-minus"></i></span>
-      <input type="text" value="1" name="num-order" id="num-order" />
+      <input type="text" value="1" data-quantity="1" name="num-order" id="num-order" />
       <span id="plus"><i class="fa fa-plus"></i></span>
     </div>
-    <a href="/cart.html" data-id=${
-      data.id
-    } title="Thêm giỏ hàng" class="add-cart">Thêm giỏ hàng</a>`
+    <a href="/cart.html" data-id=${data.id} title="Thêm giỏ hàng" class="add-cart" "${
+      Number.parseInt(data.quantity) === 0
+        ? Number.parseInt(data.status) === 0 || Number.parseInt(data.status) === 1
+          ? 'hidden'
+          : ''
+        : ''
+    }">Thêm giỏ hàng</a>`
     infoProductDesc.innerHTML = `<p>${data.description}</p>`
     // fetch list product same category
     await renderListProductSameCategory({
@@ -90,7 +97,9 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
       </a>
       <a href="/product-detail.html?id=${item.id}" title="" class="product-name">${item.name}</a>
       <div class="price">
-        <span class="new">${formatCurrencyNumber(item.discount)}</span>
+        <span class="new">${formatCurrencyNumber(
+          (item.price * (100 - Number.parseInt(item.discount))) / 100,
+        )}</span>
         <span class="old">${formatCurrencyNumber(item.price)}</span>
       </div>
       <div class="action clearfix">
@@ -107,13 +116,20 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
 // main
 ;(() => {
   let cart = localStorage.getItem('cart') !== null ? JSON.parse(localStorage.getItem('cart')) : []
+  let infoUserStorage =
+    localStorage.getItem('user_info') !== null ? JSON.parse(localStorage.getItem('user_info')) : []
   if (Array.isArray(cart) && cart.length > 0) {
-    addCartToDom({
-      idListCart: 'listCart',
-      cart,
-      idNumOrder: 'numOrder',
-      idNum: '#num.numDesktop',
-      idTotalPrice: 'totalPrice',
+    cart.forEach((item) => {
+      if (item.userID === infoUserStorage.user_id) {
+        addCartToDom({
+          idListCart: 'listCart',
+          cart,
+          userID: infoUserStorage.user_id,
+          idNumOrder: 'numOrder',
+          idNum: '#num.numDesktop',
+          idTotalPrice: 'totalPrice',
+        })
+      }
     })
   }
   renderListCategory('#listCategory')
@@ -137,10 +153,15 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
         const productID = +target.dataset.id
         if (productID) {
           sweetAlert.success('Tuyệt vời!')
-          cart = addProductToCart(productID, cart, infoUserStorage)
+          const numOrderEl = target.previousElementSibling?.querySelector("[name='num-order']")
+          let quantity = 1
+          if (numOrderEl) {
+            quantity = +numOrderEl.dataset.quantity
+          }
+          cart = addProductToCart(productID, cart, infoUserStorage, quantity)
         }
       } else {
-        toast.error('Please login to add product')
+        toast.error('Đăng nhập để mua sản phẩm')
         setTimeout(() => {
           window.location.assign('/login.html')
         }, 2000)
@@ -150,9 +171,11 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
       if (!parent) return
       const numOrderDetail = parent.querySelector('#num-order')
       if (+numOrderDetail.value <= 1) {
+        numOrderDetail.value = 1
         toast.error('Số lượng tối thiểu là 1')
       } else {
         numOrderDetail.value--
+        numOrderDetail.dataset.quantity = numOrderDetail.value--
       }
     } else if (target.closest('#plus')) {
       const parent = target.closest('#num-order-wp')
@@ -160,15 +183,8 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
       const numOrderDetail = parent.querySelector('#num-order')
       if (+numOrderDetail.value >= 1) {
         numOrderDetail.value++
+        numOrderDetail.dataset.quantity = +numOrderDetail.value
       }
-      cart = handleChangeQuantity(+numOrderDetail.value, cart, productID)
-      await addCartToDom({
-        idListCart: 'listCart',
-        cart,
-        idNumOrder: 'numOrder',
-        idNum: '#num.numDesktop',
-        idTotalPrice: 'totalPrice',
-      })
     }
   })
 })()

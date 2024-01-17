@@ -28,7 +28,9 @@ async function renderListProduct({ selector, selectorCount }) {
       </a>
       <a href="/product-detail.html" title="" class="product-name">${item.name}</a>
       <div class="price">
-        <span class="new">${formatCurrencyNumber(item.discount)}</span>
+        <span class="new">${formatCurrencyNumber(
+          (item.price * (100 - Number.parseInt(item.discount))) / 100,
+        )}</span>
         <span class="old">${formatCurrencyNumber(item.price)}</span>
       </div>
       <div class="action clearfix">
@@ -48,13 +50,20 @@ async function renderListProduct({ selector, selectorCount }) {
   renderListCategory('#listCategory')
   // get cart from localStorage
   let cart = localStorage.getItem('cart') !== null ? JSON.parse(localStorage.getItem('cart')) : []
+  let infoUserStorage =
+    localStorage.getItem('user_info') !== null ? JSON.parse(localStorage.getItem('user_info')) : []
   if (Array.isArray(cart) && cart.length > 0) {
-    addCartToDom({
-      idListCart: 'listCart',
-      cart,
-      idNumOrder: 'numOrder',
-      idNum: '#num.numDesktop',
-      idTotalPrice: 'totalPrice',
+    cart.forEach(async (item) => {
+      if (item.userID === infoUserStorage.user_id) {
+        await addCartToDom({
+          idListCart: 'listCart',
+          cart,
+          userID: infoUserStorage.user_id,
+          idNumOrder: 'numOrder',
+          idNum: '#num.numDesktop',
+          idTotalPrice: 'totalPrice',
+        })
+      }
     })
   }
   // get params from URL
@@ -73,7 +82,7 @@ async function renderListProduct({ selector, selectorCount }) {
     })
   }
   // event delegations
-  document.addEventListener('click', function (e) {
+  document.addEventListener('click', async function (e) {
     const { target } = e
     if (target.matches('.add-cart')) {
       e.preventDefault()
@@ -85,7 +94,7 @@ async function renderListProduct({ selector, selectorCount }) {
           cart = addProductToCart(productID, cart, infoUserStorage)
         }
       } else {
-        toast.error('Please login to add product')
+        toast.error('Đăng nhập để mua sản phẩm')
         setTimeout(() => {
           window.location.assign('/login.html')
         }, 2000)
@@ -95,12 +104,25 @@ async function renderListProduct({ selector, selectorCount }) {
       const infoUserStorage = localStorage.getItem('user_info')
       if (infoUserStorage) {
         const productID = +target.parentElement.parentElement.dataset.id
+        showSpinner()
+        const product = await productApi.getById(productID)
+        const priceProduct = (product.price * (100 - Number.parseInt(product.discount))) / 100
+        hideSpinner()
         if (productID) {
-          cart = addProductToCart(productID, cart, infoUserStorage)
+          cart = addProductToCart(productID, cart, infoUserStorage, 1)
+          // set status buy now for product if user click buy now button in ui
+          for (const item of cart) {
+            if (+item.productID === productID) {
+              item['isBuyNow'] = true
+              item['isChecked'] = true
+              item['price'] = priceProduct
+            }
+          }
+          localStorage.setItem('cart', JSON.stringify(cart))
           window.location.assign('/checkout.html')
         }
       } else {
-        toast.error('Please login to add product')
+        toast.error('Đăng nhập để mua sản phẩm')
         setTimeout(() => {
           window.location.assign('/login.html')
         }, 2000)

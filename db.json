@@ -1,344 +1,337 @@
 {
   "categories": [
     {
-      "id": "1",
+      "id": 1,
       "title": "Điện thoại",
-      "created_at": "2023-10-09 22:37:55",
-      "updated_at": "2023-10-09 22:37:55"
+      "timer": 1705326485295
     },
     {
-      "id": "2",
+      "id": 2,
       "title": "Laptop",
-      "created_at": "2023-10-09 22:38:05",
-      "updated_at": "2023-10-09 22:38:05"
+      "timer": 1705315693832
     },
     {
-      "id": "3",
+      "id": 3,
       "title": "Máy tính bảng",
-      "created_at": "2023-10-09 22:38:08",
-      "updated_at": "2023-10-09 22:38:08"
+      "timer": 1705315703293
     },
     {
-      "id": "4",
+      "id": 4,
       "title": "Tai nghe",
-      "created_at": "2023-10-09 22:38:15",
-      "updated_at": "2023-10-09 22:38:15"
+      "timer": 1705315713487
     },
     {
-      "id": "5",
+      "id": 5,
       "title": "Phụ kiện",
-      "created_at": "2023-10-09 22:38:19",
-      "updated_at": "2023-10-09 22:38:19"
+      "timer": 1705315717415
     },
     {
-      "id": "6",
+      "id": 6,
       "title": "Đồng hồ",
-      "created_at": "2023-10-09 22:38:24",
-      "updated_at": "2023-10-09 22:38:24"
+      "timer": 1705315720348
     },
     {
-      "id": "7",
+      "id": 7,
       "title": "Thiết bị văn phòng",
-      "created_at": "2023-10-09 22:38:27",
-      "updated_at": "2023-10-09 22:38:27"
+      "timer": 1705315724935
     }
   ],
   "comments": [
     {
-      "id": "1",
+      "id": 1,
       "userID": "2",
       "text": "a comment about post 1",
-      "productID": "1"
+      "productID": 1
     },
     {
       "id": "2",
       "userID": "2",
       "text": "another comment about post 1",
-      "productID": "1"
+      "productID": 1
     }
   ],
   "order": [],
   "orderDetails": [],
   "products": [
     {
-      "id": "1",
+      "id": 1,
       "category_id": "1",
       "name": "Motorola Moto G5S Plus",
-      "description": "<p>Bộ vi xử lý: Intel Core i505200U 2.2 GHz (3MB L3)</p>\r\n                <p>Cache upto 2.7 GHz</p>\r\n                <p>Bộ nhớ RAM:4 GB (DDR3 Bus 1600 MHz)</p>\r\n                <p>Đồ họa: Intel HD Graphics</p>\r\n                <p>Ổ đĩa cứng: 5</p>",
+      "description": "Sản phẩm 1",
       "code": "BAODEV01",
       "price": "8990000",
-      "discount": "6990000",
+      "discount": "1",
       "thumb": "img-pro-16.png",
-      "content": "<p>San pham 1</p>\r\n",
-      "status": "1",
-      "created_at": "2023-09-30 22:18:05",
-      "updated_at": "2023-09-30 22:18:05"
+      "content": "<p>San pham 1</p>\n",
+      "status": 1,
+      "quantity": "250",
+      "timer": 1705472234347
     },
     {
-      "id": "2",
-      "category_id": "1",
+      "id": 2,
+      "category_id": 1,
       "name": "Samsung Galaxy A5",
-      "description": "Samsung Galaxy A5",
+      "description": "<p>Samsung Galaxy A5</p>\n",
       "code": "BAODEV02",
-      "price": "9990000",
-      "discount": "7990000",
+      "price": 9990000,
+      "discount": 20,
       "thumb": "img-pro-15.png",
-      "content": "<p>San pham 2</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-01 15:14:49",
-      "updated_at": "2023-10-01 15:14:49"
+      "content": "<p>San pham 2</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416362854
     },
     {
-      "id": "3",
-      "category_id": "1",
+      "id": 3,
+      "category_id": 1,
       "name": "Sony Xperia XA Ultra",
       "description": "Sony Xperia XA Ultra",
       "code": "BAODEV03",
-      "price": "7990000",
-      "discount": "6990000",
+      "price": 7990000,
+      "discount": 20,
       "thumb": "img-pro-14.png",
-      "content": "<p>San pham 3</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:03:37",
-      "updated_at": "2023-10-05 11:03:37"
+      "content": "<p>San pham 3</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416469093
     },
     {
-      "id": "4",
-      "category_id": "1",
+      "id": 4,
+      "category_id": 1,
       "name": "Huawei Nova 2i",
       "description": "Huawei Nova 2i",
       "code": "BAODEV04",
-      "price": "8990000",
-      "discount": "5990000",
+      "price": 8990000,
+      "discount": 20,
       "thumb": "img-pro-13.png",
-      "content": "<p>San pham 4</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:05:21",
-      "updated_at": "2023-10-05 11:05:21"
+      "content": "<p>San pham 4</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416477743
     },
     {
-      "id": "5",
-      "category_id": "1",
+      "id": 5,
+      "category_id": 1,
       "name": "Xiaomi Mi A1",
       "description": "Xiaomi Mi A1",
       "code": "BAODEV05",
-      "price": "6900000",
-      "discount": "5900000",
+      "price": 6900000,
+      "discount": 20,
       "thumb": "img-pro-12.png",
-      "content": "<p>San pham 5</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:06:12",
-      "updated_at": "2023-10-05 11:06:12"
+      "content": "<p>San pham 5</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416499857
     },
     {
-      "id": "6",
-      "category_id": "1",
+      "id": 6,
+      "category_id": 1,
       "name": "HTC U Ultra Sapphire",
       "description": "HTC U Ultra Sapphire",
       "code": "BAODEV06",
-      "price": "18500000",
-      "discount": "16500000",
+      "price": 18500000,
+      "discount": 20,
       "thumb": "img-pro-11.png",
-      "content": "<p>Sản phẩm 6</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:10:47",
-      "updated_at": "2023-10-05 11:10:47"
+      "content": "<p>Sản phẩm 6</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416507134
     },
     {
-      "id": "7",
-      "category_id": "1",
+      "id": 7,
+      "category_id": 1,
       "name": "Sony Xperia XZ Dual",
       "description": "Sony Xperia XZ Dual",
       "code": "BAODEV07",
-      "price": "10990000",
-      "discount": "7990000",
+      "price": 10990000,
+      "discount": 20,
       "thumb": "img-pro-08.png",
-      "content": "<p>Sản phẩm 6</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:11:28",
-      "updated_at": "2023-10-05 11:11:28"
+      "content": "<p>Sản phẩm 6</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416512295
     },
     {
-      "id": "8",
-      "category_id": "1",
+      "id": 8,
+      "category_id": 1,
       "name": "Bphone 2017",
       "description": "Bphone 2017",
       "code": "BAODEV08",
-      "price": "10900000",
-      "discount": "7900000",
+      "price": 10900000,
+      "discount": 20,
       "thumb": "img-pro-10.png",
-      "content": "<p>San pham 8</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:12:02",
-      "updated_at": "2023-10-05 11:12:02"
+      "content": "<p>San pham 8</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416518088
     },
     {
-      "id": "9",
-      "category_id": "2",
+      "id": 9,
+      "category_id": 2,
       "name": "Laptop Acer Aspire ES1",
       "description": "Laptop Asus X441NA",
       "code": "BAODEV09",
-      "price": "8690000",
-      "discount": "7690000",
+      "price": 8690000,
+      "discount": 20,
       "thumb": "img-pro-17.png",
-      "content": "<p>San pham 9</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:13:59",
-      "updated_at": "2023-10-05 11:13:59"
+      "content": "<p>San pham 9</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416533319
     },
     {
-      "id": "10",
-      "category_id": "2",
+      "id": 10,
+      "category_id": 2,
       "name": "Laptop Acer ES1 X441NA",
       "description": "Laptop Acer ES1 533",
       "code": "BAODEV10",
-      "price": "9490000",
-      "discount": "7490000",
+      "price": 9490000,
+      "discount": 20,
       "thumb": "img-pro-19.png",
-      "content": "<p>San pham 10</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:20:53",
-      "updated_at": "2023-10-05 11:20:53"
+      "content": "<p>San pham 10</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416527886
     },
     {
-      "id": "11",
-      "category_id": "2",
+      "id": 11,
+      "category_id": 2,
       "name": "Laptop Lenovo IdeaPad 110",
       "description": "Laptop Lenovo IdeaPad 110",
       "code": "BAODEV11",
-      "price": "10490000",
-      "discount": "9490000",
+      "price": 10490000,
+      "discount": 20,
       "thumb": "img-pro-18.png",
-      "content": "<p>San pham 11</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:22:35",
-      "updated_at": "2023-10-05 11:22:35"
+      "content": "<p>San pham 11</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416686306
     },
     {
-      "id": "12",
-      "category_id": "2",
+      "id": 12,
+      "category_id": 2,
       "name": "Laptop Lenovo IdeaPad",
       "description": "Laptop Lenovo IdeaPad",
       "code": "BAODEV12",
-      "price": "7990000",
-      "discount": "6990000",
+      "price": 7990000,
+      "discount": 20,
       "thumb": "img-pro-20.png",
-      "content": "<p>Sản phẩm 6</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:23:24",
-      "updated_at": "2023-10-05 11:23:24"
+      "content": "<p>Sản phẩm 6</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416691989
     },
     {
-      "id": "13",
-      "category_id": "2",
+      "id": 13,
+      "category_id": 2,
       "name": "Laptop Asus X441NA",
       "description": "Laptop Asus X441NA",
       "code": "BAODEV13",
-      "price": "8490000",
-      "discount": "6490000",
+      "price": 8490000,
+      "discount": 20,
       "thumb": "img-pro-21.png",
-      "content": "<p>San pham 13</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:24:02",
-      "updated_at": "2023-10-05 11:24:02"
+      "content": "<p>San pham 13</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416700470
     },
     {
-      "id": "14",
-      "category_id": "2",
+      "id": 14,
+      "category_id": 2,
       "name": "Laptop Acer Aspire ES1",
       "description": "Laptop Acer Aspire ES1",
       "code": "BAODEV14",
-      "price": "7390000",
-      "discount": "6390000",
+      "price": 7390000,
+      "discount": 20,
       "thumb": "img-pro-22.png",
-      "content": "<p>San pham 14</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:24:41",
-      "updated_at": "2023-10-05 11:24:41"
+      "content": "<p>San pham 14</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416705350
     },
     {
-      "id": "15",
-      "category_id": "2",
+      "id": 15,
+      "category_id": 2,
       "name": "Laptop Lenovo IdeaPad 120S",
       "description": "Laptop Lenovo IdeaPad 120S",
       "code": "BAODEV15",
-      "price": "7190000",
-      "discount": "6190000",
+      "price": 7190000,
+      "discount": 20,
       "thumb": "img-pro-05.png",
-      "content": "<p>San pham 15</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:25:35",
-      "updated_at": "2023-10-05 11:25:35"
+      "content": "<p>San pham 15</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416710797
     },
     {
-      "id": "16",
-      "category_id": "2",
+      "id": 16,
+      "category_id": 2,
       "name": "Laptop Asus A540UP I5",
       "description": "Laptop Asus A540UP I5",
       "code": "BAODEV16",
-      "price": "16490000",
-      "discount": "14490000",
+      "price": 16490000,
+      "discount": 20,
       "thumb": "img-pro-23.png",
-      "content": "<p>San pham 16</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:26:30",
-      "updated_at": "2023-10-05 11:26:30"
+      "content": "<p>San pham 16</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416732624
     },
     {
-      "id": "17",
-      "category_id": "1",
+      "id": 17,
+      "category_id": 1,
       "name": "Iphone 15",
       "description": "Iphone 15",
       "code": "BAODEV17",
-      "price": "59000000",
-      "discount": "57000000",
+      "price": 59000000,
+      "discount": 20,
       "thumb": "iphone-15.jpeg",
-      "content": "<p>San pham 17</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 11:29:01",
-      "updated_at": "2023-10-05 11:29:01"
+      "content": "<p>San pham 17</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416738654
     },
     {
-      "id": "18",
-      "category_id": "1",
+      "id": 18,
+      "category_id": 1,
       "name": "Iphone XS",
       "description": "Iphone XS",
       "code": "BAODEV18",
-      "price": "10490000",
-      "discount": "9490000",
+      "price": 10490000,
+      "discount": 20,
       "thumb": "iphone-xs.jpg",
-      "content": "<p>San pham 18</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 17:41:59",
-      "updated_at": "2023-10-05 17:41:59"
+      "content": "<p>San pham 18</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416742648
     },
     {
-      "id": "19",
-      "category_id": "1",
+      "id": 19,
+      "category_id": 1,
       "name": "Samsung Galaxy Note 20 Ultra",
-      "description": "Samsung Galaxy Note 20 Ultra 5G\r\n",
+      "description": "Samsung Galaxy Note 20 Ultra 5G\n",
       "code": "BAODEV19",
-      "price": "23990000",
-      "discount": "19900000",
+      "price": 23990000,
+      "discount": 20,
       "thumb": "note-ultra.png",
-      "content": "<p>San pham 19</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 17:46:09",
-      "updated_at": "2023-10-05 17:46:09"
+      "content": "<p>San pham 19</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416746751
     },
     {
-      "id": "20",
-      "category_id": "1",
+      "id": 20,
+      "category_id": 1,
       "name": "Iphone 7 128GB",
       "description": "Iphone 7 128GB",
       "code": "BAODEV20",
-      "price": "15900000",
-      "discount": "12900000",
+      "price": 15900000,
+      "discount": 20,
       "thumb": "iphone-7.jpg",
-      "content": "<p>San pham 20</p>\r\n",
-      "status": "1",
-      "created_at": "2023-10-05 17:48:08",
-      "updated_at": "2023-10-05 17:48:08"
+      "content": "<p>San pham 20</p>\n",
+      "status": 1,
+      "quantity": 200,
+      "timer": 1705416751279
     }
   ],
   "users": [
@@ -352,16 +345,27 @@
       "roleID": 1,
       "imageUrl": "https://picsum.photos/id/407/300/300",
       "id": 1
+    },
+    {
+      "fullname": "Hoàng Bảo",
+      "username": "admin",
+      "email": "admink4.1@gmail.com",
+      "phone": "0852343047",
+      "password": "123456",
+      "password_confirmation": "123456",
+      "roleID": 2,
+      "imageUrl": "https://picsum.photos/id/407/300/300",
+      "id": 2
     }
   ],
   "roles": [
     {
-      "id": "1",
-      "title": "Admin"
+      "id": 1,
+      "title": "User"
     },
     {
-      "id": "1",
-      "title": "User"
+      "id": 2,
+      "title": "Admin"
     }
   ]
 }

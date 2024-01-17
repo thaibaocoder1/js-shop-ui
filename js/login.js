@@ -5,30 +5,32 @@ async function handleOnSubmitForm(data) {
     showSpinner()
     const users = await userApi.getAll()
     hideSpinner()
-    const infoUser = {}
+    const infoUser = []
+    let isChecked = false
     for (const user of users) {
+      if (isChecked) break
       if (user.email === data.email && user.password === data.password) {
+        isChecked = true
         toast.success('Login successfully')
-        infoUser['access_token'] = `Bearer ${new Date().getTime()}`
-        infoUser['user_id'] = user.id
-        console.log(infoUser)
+        infoUser.push({
+          access_token: `Bearer ${new Date().getTime()}`,
+          user_id: user.id,
+        })
         localStorage.setItem('user_info', JSON.stringify(infoUser))
         setTimeout(() => {
           window.location.assign('/index.html')
         }, 2000)
-      } else {
-        toast.error('Login failed')
       }
     }
   } catch (error) {
-    console.log('error', error)
+    toast.error('Login failed')
   }
 }
 // main
 ;(() => {
   // check if exists access_token
-  const accessToken = localStorage.getItem('access_token')
-  if (accessToken !== null) {
+  let infoUser = localStorage.getItem('user_info')
+  if (infoUser !== null) {
     window.location.assign('/index.html')
   }
   Validator({

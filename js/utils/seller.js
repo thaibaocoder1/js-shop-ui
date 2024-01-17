@@ -25,7 +25,9 @@ export async function renderListProductSeller(selector) {
           item.name
         }</a>
           <div class="price">
-            <span class="new">${formatCurrencyNumber(item.discount)}</span>
+            <span class="new">${formatCurrencyNumber(
+              (item.price * (100 - Number.parseInt(item.discount))) / 100,
+            )}</span>
             <span class="old">${formatCurrencyNumber(item.price)}</span>
           </div>
           <a href="/checkout.html" title="" class="buy-now">Mua ngay</a>

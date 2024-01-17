@@ -17,7 +17,9 @@ export async function displaySwiper(selector) {
     </a>
     <a href="/product-detail.html?id=${item.id}" title="" class="product-name">${item.name}</a>
     <div class="price">
-      <span class="new">${formatCurrencyNumber(item.discount)}</span>
+      <span class="new">${formatCurrencyNumber(
+        (item.price * (100 - Number.parseInt(item.discount))) / 100,
+      )}</span>
       <span class="old">${formatCurrencyNumber(item.price)}</span>
     </div>
     <div class="action clearfix">

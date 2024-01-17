@@ -10,7 +10,7 @@ import {
   toast,
 } from './utils'
 
-function displayProductInCart({ idTable, idTotalPrice, cart }) {
+function displayProductInCart({ idTable, idTotalPrice, cart, userID }) {
   const tableElement = document.getElementById(idTable)
   if (!tableElement) return
   const tableBodyEl = tableElement.getElementsByTagName('tbody')[0]
@@ -19,18 +19,21 @@ function displayProductInCart({ idTable, idTotalPrice, cart }) {
   let totalPrice = 0
   try {
     cart?.forEach(async (item) => {
-      if (item.isBuyNow || item.isChecked) {
+      if (item.isBuyNow || (item.isChecked && item.userID === userID)) {
         showSpinner()
         const product = await productApi.getById(+item.productID)
         hideSpinner()
-        totalPrice += product.discount * item.quantity
+        totalPrice +=
+          ((product.price * (100 - Number.parseInt(product.discount))) / 100) * item.quantity
         const tableRow = document.createElement('tr')
         tableRow.classList.add('cart-item')
         tableRow.innerHTML = `<td class="product-name">${
           product.name
         }<strong class="product-quantity">x ${item.quantity}</strong>
       </td>
-      <td class="product-total">${formatCurrencyNumber(item.quantity * product.discount)}</td>`
+      <td class="product-total">${formatCurrencyNumber(
+        (product.price * (100 - Number.parseInt(product.discount))) / 100,
+      )}</td>`
         tableBodyEl.appendChild(tableRow)
         const totalPriceEl = tableElement.querySelector(idTotalPrice)
         if (totalPriceEl) totalPriceEl.textContent = formatCurrencyNumber(totalPrice)
@@ -53,6 +56,7 @@ async function handleAddOrder(orderID, formValues, cart) {
   }
 }
 async function handleCheckoutFormSubmit(formValues, userID, cart) {
+  console.log(formValues)
   let orderID = null
   try {
     formValues['userID'] = userID
@@ -68,7 +72,10 @@ async function handleCheckoutFormSubmit(formValues, userID, cart) {
         orderID = null
       }
     }
-    const newCart = cart.filter((item) => !item.isBuyNow && !item.isChecked)
+    const newCart = cart.filter((item) => {
+      if (item.userID === userID && (item.isChecked || item.isBuyNow)) return false
+      return true
+    })
     toast.success('Thanh toán thành công')
     localStorage.setItem('cart', JSON.stringify(newCart))
     setTimeout(() => {
@@ -83,24 +90,32 @@ async function handleCheckoutFormSubmit(formValues, userID, cart) {
   let cart = localStorage.getItem('cart') !== null ? JSON.parse(localStorage.getItem('cart')) : []
   let infoUserStorage =
     localStorage.getItem('user_info') !== null ? JSON.parse(localStorage.getItem('user_info')) : []
+  let isCartAdded = false
   if (Array.isArray(cart) && cart.length > 0) {
-    addCartToDom({
-      idListCart: 'listCart',
-      cart,
-      idNumOrder: 'numOrder',
-      idNum: '#num.numDesktop',
-      idTotalPrice: 'totalPrice',
-    })
-    initFormCheckout({
-      idForm: '#formCheckout',
-      cart,
-      infoUserStorage,
-      onSubmit: handleCheckoutFormSubmit,
-    })
-    displayProductInCart({
-      idTable: 'tableCheckout',
-      idTotalPrice: '#totalPriceCheckout',
-      cart,
+    cart.forEach((item) => {
+      if (item.userID === infoUserStorage.user_id && !isCartAdded) {
+        addCartToDom({
+          idListCart: 'listCart',
+          cart,
+          userID: infoUserStorage.user_id,
+          idNumOrder: 'numOrder',
+          idNum: '#num.numDesktop',
+          idTotalPrice: 'totalPrice',
+        })
+        initFormCheckout({
+          idForm: '#formCheckout',
+          cart,
+          infoUserStorage,
+          onSubmit: handleCheckoutFormSubmit,
+        })
+        displayProductInCart({
+          idTable: 'tableCheckout',
+          idTotalPrice: '#totalPriceCheckout',
+          cart,
+          userID: infoUserStorage.user_id,
+        })
+        isCartAdded = true
+      }
     })
   } else {
     document.addEventListener('click', function (e) {
@@ -111,4 +126,17 @@ async function handleCheckoutFormSubmit(formValues, userID, cart) {
       }
     })
   }
+  document.addEventListener('DOMContentLoaded', function () {
+    navigator.geolocation.getCurrentPosition(
+      async function (position) {
+        const lat = position.coords.latitude
+        const lng = position.coords.longitude
+        const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`
+        document.querySelector("input[name='address']").value = googleMapsLink
+      },
+      function (error) {
+        toast.info('Bật vị trí để có thể nhập địa chỉ nhanh hơn')
+      },
+    )
+  })
 })()

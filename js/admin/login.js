@@ -11,7 +11,7 @@ async function handleOnSubmitForm(data) {
       if (isChecked) break
       if (user.email === data.email && user.password === data.password) {
         isChecked = true
-        toast.success('Login successfully')
+        toast.success('Đăng nhập thành công')
         if (infoUser.length === 0) {
           infoUser.push({
             access_token: `Bearer ${new Date().getTime()}`,
@@ -33,7 +33,7 @@ async function handleOnSubmitForm(data) {
       }
     }
   } catch (error) {
-    toast.error('Login failed')
+    toast.error('Đăng nhập thất bại')
   }
 }
 // main

@@ -6,6 +6,7 @@ function setFormValues(form, infoUser) {
   setFieldValue(form, "[name='username']", infoUser?.username)
   setFieldValue(form, "[name='email']", infoUser?.email)
   setFieldValue(form, "[name='phone']", infoUser?.phone)
+  setFieldValue(form, "[name='imageUrl']", infoUser?.imageUrl)
   setBackgroundImage(document, 'img#imageUrl', infoUser?.imageUrl)
 }
 
@@ -32,9 +33,9 @@ async function renderRoles({ idElement, idAccount }) {
       const optionEl = document.createElement('option')
       if (+role.id === idAccount) {
         optionEl.selected = 'selected'
-        optionEl.innerHTML = `<option value="${role.id}">${role.title}</option>`
-        element.appendChild(optionEl)
       }
+      optionEl.innerHTML = `<option value="${role.id}">${role.title}</option>`
+      element.appendChild(optionEl)
     })
   } catch (error) {
     console.log('failed to fetch data', error)

@@ -118,17 +118,37 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
   let cart = localStorage.getItem('cart') !== null ? JSON.parse(localStorage.getItem('cart')) : []
   let infoUserStorage =
     localStorage.getItem('user_info') !== null ? JSON.parse(localStorage.getItem('user_info')) : []
+  let isCartAdded = false
+
   if (Array.isArray(cart) && cart.length > 0) {
     cart.forEach((item) => {
-      if (item.userID === infoUserStorage.user_id) {
-        addCartToDom({
-          idListCart: 'listCart',
-          cart,
-          userID: infoUserStorage.user_id,
-          idNumOrder: 'numOrder',
-          idNum: '#num.numDesktop',
-          idTotalPrice: 'totalPrice',
-        })
+      if (infoUserStorage.length === 1) {
+        if (item.userID === infoUserStorage.user_id && !isCartAdded) {
+          addCartToDom({
+            idListCart: 'listCart',
+            cart,
+            userID: infoUserStorage.user_id,
+            idNumOrder: 'numOrder',
+            idNum: '#num.numDesktop',
+            idTotalPrice: 'totalPrice',
+          })
+        }
+        isCartAdded = true
+      } else {
+        const user = infoUserStorage.find((user) => user.roleID === 1)
+        if (user) {
+          if (item.userID === user.user_id && !isCartAdded) {
+            addCartToDom({
+              idListCart: 'listCart',
+              cart,
+              userID: user.user_id,
+              idNumOrder: 'numOrder',
+              idNum: '#num.numDesktop',
+              idTotalPrice: 'totalPrice',
+            })
+          }
+          isCartAdded = true
+        }
       }
     })
   }
@@ -148,8 +168,11 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
     const { target } = e
     if (target.matches('.add-cart')) {
       e.preventDefault()
-      const infoUserStorage = localStorage.getItem('user_info')
-      if (infoUserStorage) {
+      const infoUserStorage =
+        localStorage.getItem('user_info') !== null
+          ? JSON.parse(localStorage.getItem('user_info'))
+          : []
+      if (Array.isArray(infoUserStorage) && infoUserStorage.length > 0) {
         const productID = +target.dataset.id
         if (productID) {
           sweetAlert.success('Tuyệt vời!')
@@ -159,6 +182,10 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
             quantity = +numOrderEl.dataset.quantity
           }
           cart = addProductToCart(productID, cart, infoUserStorage, quantity)
+          toast.success('Thêm sản phẩm thành công')
+          setTimeout(() => {
+            window.location.assign(`/product-detail.html?id=${productID}`)
+          }, 1000)
         }
       } else {
         toast.error('Đăng nhập để mua sản phẩm')

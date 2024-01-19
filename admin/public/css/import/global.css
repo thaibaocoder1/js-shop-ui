@@ -78,11 +78,17 @@ form#formProduct {
   align-items: center;
   flex-wrap: wrap;
 }
-.flex-center {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+}
+.grid-layout .input-group {
+  width: 100%;
+}
+.grid-layout .input-group input {
+  width: 100% !important;
+  display: block;
 }
 form#formProduct > .input-group {
   width: 50%;

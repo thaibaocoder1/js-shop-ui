@@ -44,36 +44,68 @@ export async function addCartToDom({ idListCart, cart, userID, idNumOrder, idNum
   }
 }
 export function addProductToCart(productID, cart, infoUserStorage, quantity) {
-  const infoUser = JSON.parse(infoUserStorage)
-  let cartItemIndex = cart.findIndex(
-    (x) => x.productID === productID && x.userID === infoUser.user_id,
-  )
-
-  if (cart.length <= 0) {
-    cart = [
-      {
+  if (infoUserStorage.length === 1) {
+    let cartItemIndex = cart.findIndex(
+      (x) => x.productID === productID && x.userID === infoUserStorage[0].user_id,
+    )
+    if (cart.length <= 0) {
+      cart = [
+        {
+          productID,
+          quantity: quantity,
+          userID: infoUserStorage[0].user_id,
+        },
+      ]
+    } else if (cartItemIndex < 0) {
+      cart.push({
         productID,
         quantity: quantity,
-        userID: infoUser.user_id,
-      },
-    ]
-  } else if (cartItemIndex < 0) {
-    cart.push({
-      productID,
-      quantity: quantity,
-      userID: infoUser.user_id,
+        userID: infoUserStorage[0].user_id,
+      })
+    } else {
+      cart[cartItemIndex].quantity += quantity
+    }
+    addCartToDom({
+      idListCart: 'listCart',
+      cart,
+      userID: infoUserStorage[0].user_id,
+      idNumOrder: 'numOrder',
+      idNum: '#num.numDesktop',
+      idTotalPrice: 'totalPrice',
     })
   } else {
-    cart[cartItemIndex].quantity += quantity
+    const user = infoUserStorage.find((item) => item.roleID === 1)
+    if (user) {
+      let cartItemIndex = cart.findIndex(
+        (x) => x.productID === productID && x.userID === user.user_id,
+      )
+      if (cart.length <= 0) {
+        cart = [
+          {
+            productID,
+            quantity: quantity,
+            userID: user.user_id,
+          },
+        ]
+      } else if (cartItemIndex < 0) {
+        cart.push({
+          productID,
+          quantity: quantity,
+          userID: user.user_id,
+        })
+      } else {
+        cart[cartItemIndex].quantity += quantity
+      }
+    }
+    addCartToDom({
+      idListCart: 'listCart',
+      cart,
+      userID: user.user_id,
+      idNumOrder: 'numOrder',
+      idNum: '#num.numDesktop',
+      idTotalPrice: 'totalPrice',
+    })
   }
-  addCartToDom({
-    idListCart: 'listCart',
-    cart,
-    userID: infoUser.user_id,
-    idNumOrder: 'numOrder',
-    idNum: '#num.numDesktop',
-    idTotalPrice: 'totalPrice',
-  })
   addCartToStorage(cart)
   return cart
 }

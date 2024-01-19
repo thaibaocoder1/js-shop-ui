@@ -1,27 +1,11 @@
-import userApi from '../api/userApi'
-import { hideSpinner, showSpinner, toast } from '../utils'
+import { toast, checkLogoutAccount } from '../utils'
 
-async function checkRoleAccount(infoUserStorage) {
-  try {
-    let shouldRedirect = true
-    for (const user of infoUserStorage) {
-      showSpinner()
-      const users = await userApi.getById(user?.user_id)
-      hideSpinner()
-      if (user.roleID === '') {
-        window.location.assign('/admin/login.html')
-        shouldRedirect = false
-        break
-      }
-    }
-    if (shouldRedirect) {
-      const hasRoleID2 = infoUserStorage.some((user) => user?.roleID === 2)
-      if (hasRoleID2) {
-        toast.success('Chào mừng admin đã đăng nhập!')
-      }
-    }
-  } catch (error) {
-    toast.error('Có lỗi trong khi xử lý')
+function checkRoleAccount(infoUserStorage) {
+  const hasRoleID2 = infoUserStorage.some((user) => user?.roleID === 2)
+  if (hasRoleID2) {
+    toast.success('Chào mừng admin đã đăng nhập!')
+  } else {
+    window.location.assign('/admin/login.html')
   }
 }
 // main
@@ -33,4 +17,11 @@ async function checkRoleAccount(infoUserStorage) {
   } else {
     checkRoleAccount(infoUserStorage)
   }
+  document.addEventListener('click', function (e) {
+    const { target } = e
+    if (target.matches("a[title='Thoát']")) {
+      e.preventDefault()
+      checkLogoutAccount()
+    }
+  })
 })()

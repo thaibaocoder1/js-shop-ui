@@ -40,7 +40,7 @@
   width: 82%;
   border-left: 1px solid #ddd;
   padding: 20px;
-  /* height: 90vh; */
+  min-height: 800px;
 }
 #add-new {
   display: inline-block;

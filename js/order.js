@@ -1,13 +1,9 @@
 import userApi from './api/userApi'
-import {
-  addCartToDom,
-  hideSpinner,
-  initUserForm,
-  setBackgroundImage,
-  setFieldValue,
-  showSpinner,
-  toast,
-} from './utils'
+import orderApi from './api/orderApi'
+import { addCartToDom, hideSpinner, initUserForm, showSpinner, toast } from './utils'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
 function displayTagLink(ulElement) {
   ulElement.textContent = ''
   const infoArr = ['Cập nhật thông tin', 'Quản lý đơn hàng', 'Đăng xuất']
@@ -17,26 +13,11 @@ function displayTagLink(ulElement) {
     ulElement.appendChild(liElement)
   }
 }
-async function displayInfoUser(userID, divInfoLeftEl, userAvatarEl) {
-  if (!userID) return
-  try {
-    showSpinner()
-    const infoUser = await userApi.getById(userID)
-    hideSpinner()
-    setFieldValue(divInfoLeftEl, "input[name='fullname']", infoUser?.fullname)
-    setFieldValue(divInfoLeftEl, "input[name='username']", infoUser?.username)
-    setFieldValue(divInfoLeftEl, "input[name='email']", infoUser?.email)
-    setFieldValue(divInfoLeftEl, "input[name='phone']", infoUser?.phone)
-    setBackgroundImage(userAvatarEl, 'img#avatar', infoUser?.imageUrl)
-  } catch (error) {
-    console.log('failed to fetch data', error)
-  }
-}
-async function renderInfoAccount({ idElement, infoUserStorage, divInfoLeft, divInfoRight }) {
+
+async function renderInfoAccount({ idElement, infoUserStorage, divInfoLeft }) {
   const ulElement = document.getElementById(idElement)
   const divInfoLeftEl = document.getElementById(divInfoLeft)
-  const userAvatarEl = document.getElementById(divInfoRight)
-  if (!ulElement || !divInfoLeftEl || !userAvatarEl) return
+  if (!ulElement || !divInfoLeftEl) return
   if (infoUserStorage.length === 0) {
     divInfoLeftEl.classList.add('is-hide')
     userAvatarEl.classList.add('is-hide')
@@ -44,11 +25,33 @@ async function renderInfoAccount({ idElement, infoUserStorage, divInfoLeft, divI
   for (const user of infoUserStorage) {
     if (user.access_token) {
       displayTagLink(ulElement)
-      displayInfoUser(user.user_id, divInfoLeftEl, userAvatarEl)
     }
     break
   }
 }
+
+async function handleCancelOrder(orderID) {
+  if (!orderID) return
+  let isSuccess = false
+  try {
+    showSpinner()
+    const order = await orderApi.getById(orderID)
+    hideSpinner()
+    if (order) {
+      const orderStatus = +order.status
+      if (orderStatus === 1) {
+        await orderApi.delete(orderID)
+        isSuccess = true
+      } else {
+        toast.error('Không thể huỷ đơn hàng')
+      }
+    }
+  } catch (error) {
+    console.log('failed to fetch data', error)
+  }
+  return isSuccess
+}
+
 function handleOnClick() {
   // add event for element render after dom
   document.addEventListener('click', async function (e) {
@@ -79,8 +82,73 @@ function handleOnClick() {
       }
     } else if (target.matches("a[title='Quản lý đơn hàng']")) {
       window.location.assign('/order.html')
+    } else if (target.matches('#orderDetail')) {
+      const orderID = +target.dataset.id
+      window.location.assign(`/detail-order.html?id=${orderID}`)
+    } else if (target.matches('#cancelOrder')) {
+      const orderID = +target.dataset.id
+      const isCancel = await handleCancelOrder(orderID)
+      if (isCancel) {
+        toast.success('Huỷ đơn hàng thành công')
+        const orderItem = target.parentElement.parentElement
+        orderItem && orderItem.remove()
+      }
     }
   })
+}
+
+function displayStatus(status) {
+  if (!status) return
+  if (+status !== 1) {
+    return 'hidden'
+  }
+  return ''
+}
+
+async function renderListOrder({ idTable, infoUserStorage }) {
+  const table = document.getElementById(idTable)
+  if (!table) return
+  const tbodyEl = table.getElementsByTagName('tbody')[0]
+  if (!tbodyEl) return
+  try {
+    showSpinner()
+    const orders = await orderApi.getAll()
+    hideSpinner()
+    if (infoUserStorage.length === 1) {
+      const user = infoUserStorage[0]
+      const userID = user.user_id
+      const listOrderApply = orders.filter((order) => order.userID === userID)
+      if (listOrderApply.length === 0) {
+        toast.info('Bạn chưa mua đơn hàng nào')
+        return
+      }
+      listOrderApply.forEach((item, index) => {
+        const tableRow = document.createElement('tr')
+        tableRow.dataset.id = item.id
+        tableRow.innerHTML = `<th scope="row">${index + 1}</th>
+        <td>${item.fullname}</td>
+        <td>${item.email}</td>
+        <td>${item.phone}</td>
+        <td>${dayjs(item.orderDate).fromNow()}</td>
+        <td>
+          <button type="button" class="btn btn-primary" id="orderDetail" data-id="${
+            item.id
+          }">Chi tiết</button>
+          <button type="button" id="cancelOrder" data-id="${
+            item.id
+          }" class="btn btn-danger" ${displayStatus(item.status)} >Huỷ đơn</button>
+        </td>`
+        tbodyEl.appendChild(tableRow)
+      })
+    } else {
+      const user = infoUserStorage.find((user) => user?.roleID === 1)
+      if (user) {
+        console.log('user with id = 1')
+      }
+    }
+  } catch (error) {
+    console.log('failed to fetch data', error)
+  }
 }
 // main
 ;(() => {
@@ -124,8 +192,11 @@ function handleOnClick() {
   renderInfoAccount({
     idElement: 'accountUser',
     infoUserStorage,
-    divInfoLeft: 'userInfo',
-    divInfoRight: 'userAvatar',
+    divInfoLeft: 'listOrderUser',
+  })
+  renderListOrder({
+    idTable: 'listOrderUser',
+    infoUserStorage,
   })
   handleOnClick()
 })()

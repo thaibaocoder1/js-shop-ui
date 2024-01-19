@@ -74,6 +74,8 @@
           </div>
         </div>
       </div>
+    </div>
+    <div id="main-content-wp">
       <div id="sidebar" class="fl-left">
         <ul id="sidebar-menu">
           <li class="nav-item">
@@ -117,12 +119,41 @@
           </li>
         </ul>
       </div>
+      <div id="content" class="detail-exhibition fl-right">
+        <div class="section" id="info">
+          <div class="section-head">
+            <h3 class="section-title">Thông tin đơn hàng</h3>
+          </div>
+          <ul class="list-item" id="infoOrder"></ul>
+        </div>
+        <div class="section">
+          <div class="section-head">
+            <h3 class="section-title">Sản phẩm đơn hàng</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table info-exhibition" id="orderDetailTable">
+              <thead>
+                <tr>
+                  <td class="thead-text">STT</td>
+                  <td class="thead-text">Ảnh sản phẩm</td>
+                  <td class="thead-text">Tên sản phẩm</td>
+                  <td class="thead-text">Đơn giá</td>
+                  <td class="thead-text">Số lượng</td>
+                  <td class="thead-text">Thành tiền</td>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="section" id="finalResult"></div>
+      </div>
     </div>
     <div id="footer-wp">
       <div class="wp-inner">
         <p id="copyright">2024 © thaibaocoder1</p>
       </div>
     </div>
-    <script type="module" src="/js/admin/home.js"></script>
+    <script type="module" src="/js/admin/order-detail.js"></script>
   </body>
 </html>

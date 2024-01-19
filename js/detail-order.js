@@ -1,13 +1,17 @@
 import userApi from './api/userApi'
+import orderDetailApi from './api/orderDetailApi'
 import {
   addCartToDom,
+  formatCurrencyNumber,
   hideSpinner,
   initUserForm,
-  setBackgroundImage,
-  setFieldValue,
   showSpinner,
   toast,
 } from './utils'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import productApi from './api/productsApi'
+dayjs.extend(relativeTime)
 function displayTagLink(ulElement) {
   ulElement.textContent = ''
   const infoArr = ['Cập nhật thông tin', 'Quản lý đơn hàng', 'Đăng xuất']
@@ -17,26 +21,11 @@ function displayTagLink(ulElement) {
     ulElement.appendChild(liElement)
   }
 }
-async function displayInfoUser(userID, divInfoLeftEl, userAvatarEl) {
-  if (!userID) return
-  try {
-    showSpinner()
-    const infoUser = await userApi.getById(userID)
-    hideSpinner()
-    setFieldValue(divInfoLeftEl, "input[name='fullname']", infoUser?.fullname)
-    setFieldValue(divInfoLeftEl, "input[name='username']", infoUser?.username)
-    setFieldValue(divInfoLeftEl, "input[name='email']", infoUser?.email)
-    setFieldValue(divInfoLeftEl, "input[name='phone']", infoUser?.phone)
-    setBackgroundImage(userAvatarEl, 'img#avatar', infoUser?.imageUrl)
-  } catch (error) {
-    console.log('failed to fetch data', error)
-  }
-}
-async function renderInfoAccount({ idElement, infoUserStorage, divInfoLeft, divInfoRight }) {
+
+async function renderInfoAccount({ idElement, infoUserStorage, divInfoLeft }) {
   const ulElement = document.getElementById(idElement)
   const divInfoLeftEl = document.getElementById(divInfoLeft)
-  const userAvatarEl = document.getElementById(divInfoRight)
-  if (!ulElement || !divInfoLeftEl || !userAvatarEl) return
+  if (!ulElement || !divInfoLeftEl) return
   if (infoUserStorage.length === 0) {
     divInfoLeftEl.classList.add('is-hide')
     userAvatarEl.classList.add('is-hide')
@@ -44,11 +33,11 @@ async function renderInfoAccount({ idElement, infoUserStorage, divInfoLeft, divI
   for (const user of infoUserStorage) {
     if (user.access_token) {
       displayTagLink(ulElement)
-      displayInfoUser(user.user_id, divInfoLeftEl, userAvatarEl)
     }
     break
   }
 }
+
 function handleOnClick() {
   // add event for element render after dom
   document.addEventListener('click', async function (e) {
@@ -79,8 +68,66 @@ function handleOnClick() {
       }
     } else if (target.matches("a[title='Quản lý đơn hàng']")) {
       window.location.assign('/order.html')
+    } else if (target.matches('#orderDetail')) {
+      const orderID = +target.dataset.id
+      window.location.assign(`/detail-order.html?id=${orderID}`)
     }
   })
+}
+
+function displayStatus(status) {
+  if (!status) return
+  if (+status !== 1) {
+    return 'hidden'
+  }
+  return ''
+}
+
+async function renderListOrder({ idTable, infoUserStorage, orderID }) {
+  const table = document.getElementById(idTable)
+  if (!table) return
+  const tbodyEl = table.getElementsByTagName('tbody')[0]
+  if (!tbodyEl) return
+  try {
+    showSpinner()
+    const orderDetail = await orderDetailApi.getAll()
+    hideSpinner()
+    if (infoUserStorage.length === 1) {
+      const user = infoUserStorage[0]
+      const listOrderApply = orderDetail.filter((order) => order.orderID === orderID)
+      if (listOrderApply.length === 0) {
+        toast.info('Bạn chưa mua đơn hàng nào')
+        return
+      }
+      listOrderApply.forEach(async (item, index) => {
+        const infoProduct = await productApi.getById(item.productID)
+        const tableRow = document.createElement('tr')
+        const price =
+          infoProduct.price * ((100 - Number.parseInt(infoProduct.discount)) / 100) * item.quantity
+        tableRow.innerHTML = `<th scope="row">${index + 1}</th>
+        <td>${item.orderID}</td>
+        <td>${item.userID}</td>
+        <td><a href="/product-detail.html?id=${infoProduct.id}">${infoProduct.name}</a></td>
+        <td>
+          <img src="/public/images/${infoProduct.thumb}" alt="${
+          infoProduct.name
+        }" style="width: 150px;
+          height: 150px; object-fit: cover;" />
+        </td>
+        <td>${formatCurrencyNumber(price)}</td>
+        <td>${item.quantity}</td>
+       `
+        tbodyEl.appendChild(tableRow)
+      })
+    } else {
+      const user = infoUserStorage.find((user) => user?.roleID === 1)
+      if (user) {
+        console.log('user with id = 1')
+      }
+    }
+  } catch (error) {
+    console.log('failed to fetch data', error)
+  }
 }
 // main
 ;(() => {
@@ -124,8 +171,16 @@ function handleOnClick() {
   renderInfoAccount({
     idElement: 'accountUser',
     infoUserStorage,
-    divInfoLeft: 'userInfo',
-    divInfoRight: 'userAvatar',
+    divInfoLeft: 'listOrderUser',
   })
+  const searchParams = new URLSearchParams(location.search)
+  const orderID = +searchParams.get('id')
+  if (orderID) {
+    renderListOrder({
+      idTable: 'listOrderUser',
+      infoUserStorage,
+      orderID,
+    })
+  }
   handleOnClick()
 })()

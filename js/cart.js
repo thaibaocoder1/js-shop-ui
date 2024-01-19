@@ -107,55 +107,6 @@ async function renderListProductInCart({ idTable, cart, idTotalPrice, infoUserSt
         tableBodyElement.appendChild(tableRowElement)
       }
     })
-    // event delegations after render dom
-    let checkedProducts = cart.filter((item) => item.isChecked)
-    let totalTemp
-    function updateTotal() {
-      if (checkedProducts.length > 0) {
-        totalTemp = checkedProducts.reduce((total, item) => {
-          return total + item.quantity * item.price
-        }, 0)
-      } else {
-        totalTemp = 0
-      }
-      document.getElementById(
-        idTotalPrice,
-      ).innerHTML = `Tổng thanh toán: <span>${formatCurrencyNumber(totalTemp)}</span>`
-    }
-    updateTotal()
-    const listCheckbox = tableBodyElement.querySelectorAll("input[name='product']")
-    if (listCheckbox.length > 0) {
-      listCheckbox.forEach((checkbox) => {
-        checkbox.addEventListener('click', () => {
-          const priceProduct = +checkbox.value
-          const productID = +checkbox.dataset.id
-          const existingProduct = checkedProducts.find((item) => item.productID === productID)
-
-          if (checkbox.checked) {
-            if (!existingProduct) {
-              const newItem = cart.find((item) => item.productID === productID)
-              checkedProducts.push(newItem)
-            }
-            totalTemp += priceProduct
-          } else {
-            totalTemp -= existingProduct ? existingProduct.quantity * existingProduct.price : 0
-
-            if (existingProduct) {
-              checkedProducts = checkedProducts.filter((item) => item.productID !== productID)
-            }
-          }
-          const newCart = cart.filter((item) => {
-            if (item.productID === productID) {
-              item.isChecked = checkbox.checked
-              item.price = +checkbox.dataset.price
-            }
-            return item
-          })
-          localStorage.setItem('cart', JSON.stringify(newCart))
-          updateTotal()
-        })
-      })
-    }
   }
 }
 
@@ -168,22 +119,45 @@ async function renderListProductInCart({ idTable, cart, idTotalPrice, infoUserSt
   let isCartAdded = false
   if (Array.isArray(cart) && cart.length > 0) {
     cart.forEach((item) => {
-      if (item.userID === infoUserStorage.user_id && !isCartAdded) {
-        addCartToDom({
-          idListCart: 'listCart',
-          cart,
-          userID: infoUserStorage.user_id,
-          idNumOrder: 'numOrder',
-          idNum: '#num.numDesktop',
-          idTotalPrice: 'totalPrice',
-        })
-        renderListProductInCart({
-          idTable: 'tableCart',
-          cart,
-          idTotalPrice: 'total-price',
-          infoUserStorage,
-        })
-        isCartAdded = true
+      if (infoUserStorage.length === 1) {
+        if (item.userID === infoUserStorage[0].user_id && !isCartAdded) {
+          addCartToDom({
+            idListCart: 'listCart',
+            cart,
+            userID: infoUserStorage[0].user_id,
+            idNumOrder: 'numOrder',
+            idNum: '#num.numDesktop',
+            idTotalPrice: 'totalPrice',
+          })
+          renderListProductInCart({
+            idTable: 'tableCart',
+            cart,
+            idTotalPrice: 'total-price',
+            infoUserStorage: infoUserStorage[0],
+          })
+          isCartAdded = true
+        }
+      } else {
+        const user = infoUserStorage.find((user) => user.roleID === 1)
+        if (user) {
+          if (item.userID === user.user_id && !isCartAdded) {
+            addCartToDom({
+              idListCart: 'listCart',
+              cart,
+              userID: user.user_id,
+              idNumOrder: 'numOrder',
+              idNum: '#num.numDesktop',
+              idTotalPrice: 'totalPrice',
+            })
+            renderListProductInCart({
+              idTable: 'tableCart',
+              cart,
+              idTotalPrice: 'total-price',
+              infoUserStorage: user,
+            })
+            isCartAdded = true
+          }
+        }
       }
     })
   } else {
@@ -193,20 +167,27 @@ async function renderListProductInCart({ idTable, cart, idTotalPrice, infoUserSt
     if (e.target.matches('#btn-buy-product')) {
       window.location.assign('/products.html')
     } else if (e.target.matches('#btn-remove-product')) {
-      cart?.forEach((item) => {
-        if (+item.userID === +infoUserStorage.user_id) {
-          sweetAlert.error('Xoá toàn bộ giỏ hàng?')
-          const newCart = cart.filter((x) => x.userID !== +infoUserStorage.user_id)
-          const tableCartElement = document.getElementById('tableCart')
-          const tbodyElement = tableCartElement.getElementsByTagName('tbody')[0]
-          setTimeout(() => {
-            while (tbodyElement.firstChild) {
-              tbodyElement.removeChild(tbodyElement.firstChild)
+      let newCart
+      sweetAlert.error('Xoá toàn bộ giỏ hàng?')
+      cart?.forEach(async (item) => {
+        if (infoUserStorage.length === 1) {
+          if (+item.userID === +infoUserStorage[0].user_id) {
+            newCart = cart.filter((x) => x.userID !== +infoUserStorage[0].user_id)
+            localStorage.setItem('cart', JSON.stringify(newCart))
+          } else {
+            const user = infoUserStorage.find((user) => user?.roleID === 1)
+            if (user) {
+              newCart = cart.filter((x) => x.userID !== +user.user_id)
+              localStorage.setItem('cart', JSON.stringify(newCart))
             }
-          }, 5000)
-          localStorage.setItem('cart', JSON.stringify(newCart))
-          document.getElementById('btn-remove-product').hidden = true
+          }
         }
+        const tableCartElement = document.getElementById('tableCart')
+        const tbodyElement = tableCartElement.getElementsByTagName('tbody')[0]
+        while (tbodyElement.firstChild) {
+          tbodyElement.removeChild(tbodyElement.firstChild)
+        }
+        document.getElementById('btn-remove-product').hidden = true
       })
     } else if (e.target.matches('#checkout-cart')) {
       e.preventDefault()
@@ -232,6 +213,7 @@ async function renderListProductInCart({ idTable, cart, idTotalPrice, infoUserSt
         cart.splice(productIndex, 1)
         localStorage.setItem('cart', JSON.stringify(cart))
         e.target.parentElement.parentElement.parentElement.remove()
+        populateNewData()
         let totalTemp = 0
         if (cart.length > 0) {
           for (const item of cart) {
@@ -244,14 +226,28 @@ async function renderListProductInCart({ idTable, cart, idTotalPrice, infoUserSt
             }
           }
         }
-        addCartToDom({
-          idListCart: 'listCart',
-          cart,
-          userID: infoUserStorage.user_id,
-          idNumOrder: 'numOrder',
-          idNum: '#num.numDesktop',
-          idTotalPrice: 'totalPrice',
-        })
+        if (infoUserStorage.length === 1) {
+          await addCartToDom({
+            idListCart: 'listCart',
+            cart,
+            userID: infoUserStorage[0].user_id,
+            idNumOrder: 'numOrder',
+            idNum: '#num.numDesktop',
+            idTotalPrice: 'totalPrice',
+          })
+        } else {
+          const user = infoUserStorage.find((user) => user?.roleID === 1)
+          if (user) {
+            await addCartToDom({
+              idListCart: 'listCart',
+              cart,
+              userID: user.user_id,
+              idNumOrder: 'numOrder',
+              idNum: '#num.numDesktop',
+              idTotalPrice: 'totalPrice',
+            })
+          }
+        }
         const totalPriceEl = document.getElementById('total-price')
         if (totalPriceEl) {
           totalPriceEl.innerHTML = `Tổng thanh toán: <span>${formatCurrencyNumber(
@@ -272,15 +268,30 @@ async function renderListProductInCart({ idTable, cart, idTotalPrice, infoUserSt
       if (isNaN(inputValue) || inputValue < 0) {
         toast.error('Không được chỉnh về số âm')
       }
-      cart = handleChangeQuantity(inputValue, cart, infoUserStorage.user_id, productID)
-      await addCartToDom({
-        idListCart: 'listCart',
-        cart,
-        userID: infoUserStorage.user_id,
-        idNumOrder: 'numOrder',
-        idNum: '#num.numDesktop',
-        idTotalPrice: 'totalPrice',
-      })
+      if (infoUserStorage.length === 1) {
+        cart = handleChangeQuantity(inputValue, cart, infoUserStorage.user_id, productID)
+        await addCartToDom({
+          idListCart: 'listCart',
+          cart,
+          userID: infoUserStorage.user_id,
+          idNumOrder: 'numOrder',
+          idNum: '#num.numDesktop',
+          idTotalPrice: 'totalPrice',
+        })
+      } else {
+        const user = infoUserStorage.find((user) => user?.roleID === 1)
+        if (user) {
+          cart = handleChangeQuantity(inputValue, cart, user.user_id, productID)
+          await addCartToDom({
+            idListCart: 'listCart',
+            cart,
+            userID: user.user_id,
+            idNumOrder: 'numOrder',
+            idNum: '#num.numDesktop',
+            idTotalPrice: 'totalPrice',
+          })
+        }
+      }
       const productPrice = e.target.parentElement.parentElement.querySelector('#priceProduct')
       productPrice.innerHTML = `${formatCurrencyNumber(
         cart[index].quantity * ((product.price * (100 - Number.parseInt(product.discount))) / 100),
@@ -312,6 +323,55 @@ async function renderListProductInCart({ idTable, cart, idTotalPrice, infoUserSt
           }
         }
       }
+    } else if (e.target.matches("input[name='product']")) {
+      const cartFromStorage = JSON.parse(localStorage.getItem('cart'))
+
+      let checkedProducts = cartFromStorage.filter((item) => item.isChecked)
+      let totalTemp
+      function updateTotal() {
+        if (checkedProducts.length > 0) {
+          totalTemp = checkedProducts.reduce((total, item) => {
+            return total + item.quantity * item.price
+          }, 0)
+        } else {
+          totalTemp = 0
+        }
+        document.getElementById(
+          'total-price',
+        ).innerHTML = `Tổng thanh toán: <span>${formatCurrencyNumber(totalTemp)}</span>`
+      }
+      updateTotal()
+
+      const checkbox = e.target
+
+      const priceProduct = +checkbox.value
+      const productID = +checkbox.dataset.id
+      const existingProduct = checkedProducts.find((item) => item.productID === productID)
+
+      if (checkbox.checked) {
+        if (!existingProduct) {
+          const newItem = cartFromStorage.find((item) => item.productID === productID)
+          checkedProducts.push(newItem)
+        }
+        totalTemp += priceProduct
+      } else {
+        totalTemp -= existingProduct ? existingProduct.quantity * existingProduct.price : 0
+
+        if (existingProduct) {
+          checkedProducts = checkedProducts.filter((item) => item.productID !== productID)
+        }
+      }
+
+      const newCart = cartFromStorage.filter((item) => {
+        if (item.productID === productID) {
+          item.isChecked = checkbox.checked
+          item.price = +checkbox.dataset.price
+        }
+        return item
+      })
+
+      localStorage.setItem('cart', JSON.stringify(newCart))
+      updateTotal()
     }
   })
 })()

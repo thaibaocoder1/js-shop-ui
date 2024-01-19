@@ -1,9 +1,10 @@
 import userApi from '../api/userApi'
 import { hideSpinner, showSpinner } from '../utils'
 
-async function renderListUser({ idTable }) {
+async function renderListUser({ idTable, idBreadcrumb }) {
   const table = document.getElementById(idTable)
-  if (!table) return
+  const breadcrumbUserEl = document.getElementById(idBreadcrumb)
+  if (!table || !breadcrumbUserEl) return
   const tbody = table.getElementsByTagName('tbody')[0]
   if (!tbody) return
   try {
@@ -25,6 +26,9 @@ async function renderListUser({ idTable }) {
       </td>`
       tbody.appendChild(tableRow)
     })
+    breadcrumbUserEl.innerHTML = `<li class="all">
+    <a id="breadcrumbCategory" href="">Tất cả <span class="count">(${users.length})</span></a>
+  </li>`
   } catch (error) {
     console.log('failed to fetch data', error)
   }
@@ -33,5 +37,6 @@ async function renderListUser({ idTable }) {
 ;(() => {
   renderListUser({
     idTable: 'listUserTable',
+    idBreadcrumb: 'breadcrumbUser',
   })
 })()

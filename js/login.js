@@ -11,19 +11,31 @@ async function handleOnSubmitForm(data) {
       if (isChecked) break
       if (user.email === data.email && user.password === data.password) {
         isChecked = true
-        toast.success('Login successfully')
-        infoUser.push({
-          access_token: `Bearer ${new Date().getTime()}`,
-          user_id: user.id,
-        })
+        toast.success('Đăng nhập thành công')
+        if (user.roleID === 1) {
+          infoUser.push({
+            access_token: `Bearer ${new Date().getTime()}`,
+            user_id: user.id,
+            roleID: 1,
+          })
+          setTimeout(() => {
+            window.location.assign('/index.html')
+          }, 2000)
+        } else {
+          infoUser.push({
+            access_token: `Bearer ${new Date().getTime()}`,
+            user_id: user.id,
+            roleID: 2,
+          })
+          setTimeout(() => {
+            window.location.assign('/admin/index.html')
+          }, 2000)
+        }
         localStorage.setItem('user_info', JSON.stringify(infoUser))
-        setTimeout(() => {
-          window.location.assign('/index.html')
-        }, 2000)
       }
     }
   } catch (error) {
-    toast.error('Login failed')
+    toast.error('Đăng nhập thất bại')
   }
 }
 // main
@@ -31,7 +43,11 @@ async function handleOnSubmitForm(data) {
   // check if exists access_token
   let infoUser = localStorage.getItem('user_info')
   if (infoUser !== null) {
-    window.location.assign('/index.html')
+    infoUser = JSON.parse(localStorage.getItem('user_info'))
+    if (infoUser.length !== 0) {
+      const isHasRoleAdmin = infoUser.findIndex((user) => user?.roleID === 2)
+      if (isHasRoleAdmin < 0) window.location.assign('/index.html')
+    }
   }
   Validator({
     formID: '#form-1',

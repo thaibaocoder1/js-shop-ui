@@ -50,13 +50,12 @@ async function handleAddOrder(orderID, formValues, cart) {
     if (item.isChecked || item.isBuyNow) {
       const product = await productApi.getById(item.productID)
       item['orderID'] = orderID
-      item['price'] = product.discount
+      item['price'] = (product.price * (100 - Number.parseInt(product.discount))) / 100
       await orderDetailApi.add(item)
     }
   }
 }
 async function handleCheckoutFormSubmit(formValues, userID, cart) {
-  console.log(formValues)
   let orderID = null
   try {
     formValues['userID'] = userID
@@ -93,28 +92,58 @@ async function handleCheckoutFormSubmit(formValues, userID, cart) {
   let isCartAdded = false
   if (Array.isArray(cart) && cart.length > 0) {
     cart.forEach((item) => {
-      if (item.userID === infoUserStorage.user_id && !isCartAdded) {
-        addCartToDom({
-          idListCart: 'listCart',
-          cart,
-          userID: infoUserStorage.user_id,
-          idNumOrder: 'numOrder',
-          idNum: '#num.numDesktop',
-          idTotalPrice: 'totalPrice',
-        })
-        initFormCheckout({
-          idForm: '#formCheckout',
-          cart,
-          infoUserStorage,
-          onSubmit: handleCheckoutFormSubmit,
-        })
-        displayProductInCart({
-          idTable: 'tableCheckout',
-          idTotalPrice: '#totalPriceCheckout',
-          cart,
-          userID: infoUserStorage.user_id,
-        })
-        isCartAdded = true
+      if (infoUserStorage.length === 1) {
+        const infoUser = infoUserStorage[0]
+        if (item.userID === infoUserStorage[0].user_id && !isCartAdded) {
+          addCartToDom({
+            idListCart: 'listCart',
+            cart,
+            userID: infoUserStorage[0].user_id,
+            idNumOrder: 'numOrder',
+            idNum: '#num.numDesktop',
+            idTotalPrice: 'totalPrice',
+          })
+          initFormCheckout({
+            idForm: '#formCheckout',
+            cart,
+            infoUserStorage: infoUser,
+            onSubmit: handleCheckoutFormSubmit,
+          })
+          displayProductInCart({
+            idTable: 'tableCheckout',
+            idTotalPrice: '#totalPriceCheckout',
+            cart,
+            userID: infoUserStorage[0].user_id,
+          })
+          isCartAdded = true
+        }
+      } else {
+        const user = infoUserStorage.find((user) => user.roleID === 1)
+        if (user) {
+          if (item.userID === user.user_id && !isCartAdded) {
+            addCartToDom({
+              idListCart: 'listCart',
+              cart,
+              userID: user.user_id,
+              idNumOrder: 'numOrder',
+              idNum: '#num.numDesktop',
+              idTotalPrice: 'totalPrice',
+            })
+            initFormCheckout({
+              idForm: '#formCheckout',
+              cart,
+              infoUserStorage: user,
+              onSubmit: handleCheckoutFormSubmit,
+            })
+            displayProductInCart({
+              idTable: 'tableCheckout',
+              idTotalPrice: '#totalPriceCheckout',
+              cart,
+              userID: user.user_id,
+            })
+            isCartAdded = true
+          }
+        }
       }
     })
   } else {

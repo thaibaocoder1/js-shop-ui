@@ -52,17 +52,36 @@ async function renderListProduct({ selector, selectorCount }) {
   let cart = localStorage.getItem('cart') !== null ? JSON.parse(localStorage.getItem('cart')) : []
   let infoUserStorage =
     localStorage.getItem('user_info') !== null ? JSON.parse(localStorage.getItem('user_info')) : []
+  let isCartAdded = false
   if (Array.isArray(cart) && cart.length > 0) {
     cart.forEach(async (item) => {
-      if (item.userID === infoUserStorage.user_id) {
-        await addCartToDom({
-          idListCart: 'listCart',
-          cart,
-          userID: infoUserStorage.user_id,
-          idNumOrder: 'numOrder',
-          idNum: '#num.numDesktop',
-          idTotalPrice: 'totalPrice',
-        })
+      if (infoUserStorage.length === 1) {
+        if (item.userID === infoUserStorage[0].user_id && !isCartAdded) {
+          await addCartToDom({
+            idListCart: 'listCart',
+            cart,
+            userID: infoUserStorage[0].user_id,
+            idNumOrder: 'numOrder',
+            idNum: '#num.numDesktop',
+            idTotalPrice: 'totalPrice',
+          })
+          isCartAdded = true
+        }
+      } else {
+        const user = infoUserStorage.find((item) => item.roleID === 1)
+        if (user) {
+          if (item.userID === user.user_id && !isCartAdded) {
+            await addCartToDom({
+              idListCart: 'listCart',
+              cart,
+              userID: user.user_id,
+              idNumOrder: 'numOrder',
+              idNum: '#num.numDesktop',
+              idTotalPrice: 'totalPrice',
+            })
+            isCartAdded = true
+          }
+        }
       }
     })
   }
@@ -86,12 +105,15 @@ async function renderListProduct({ selector, selectorCount }) {
     const { target } = e
     if (target.matches('.add-cart')) {
       e.preventDefault()
-      const infoUserStorage = localStorage.getItem('user_info')
-      if (infoUserStorage) {
+      const infoUserStorage =
+        localStorage.getItem('user_info') !== null
+          ? JSON.parse(localStorage.getItem('user_info'))
+          : []
+      if (Array.isArray(infoUserStorage) && infoUserStorage.length > 0) {
         const productID = +target.parentElement.parentElement.dataset.id
         if (productID) {
           sweetAlert.success('Tuyệt vời!')
-          cart = addProductToCart(productID, cart, infoUserStorage)
+          cart = addProductToCart(productID, cart, infoUserStorage, 1)
         }
       } else {
         toast.error('Đăng nhập để mua sản phẩm')
@@ -101,8 +123,11 @@ async function renderListProduct({ selector, selectorCount }) {
       }
     } else if (target.matches('.buy-now')) {
       e.preventDefault()
-      const infoUserStorage = localStorage.getItem('user_info')
-      if (infoUserStorage) {
+      const infoUserStorage =
+        localStorage.getItem('user_info') !== null
+          ? JSON.parse(localStorage.getItem('user_info'))
+          : []
+      if (Array.isArray(infoUserStorage) && infoUserStorage.length > 0) {
         const productID = +target.parentElement.parentElement.dataset.id
         showSpinner()
         const product = await productApi.getById(productID)

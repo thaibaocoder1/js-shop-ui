@@ -201,11 +201,17 @@
 .users-box {
   display: flex;
   justify-content: space-between;
-  gap: 0 15px;
+  flex-wrap: wrap;
+  gap: 0 10px;
 }
 .user-left,
 .user-right {
-  width: 49.5%;
+  width: 49%;
+}
+.user-right {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 .user-right img {
   display: block;

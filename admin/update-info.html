@@ -93,7 +93,7 @@
                   <a href="/admin/update-info.html" title="" class="nav-link">Cập nhật thông tin</a>
                 </li>
                 <li class="nav-item">
-                  <a href="/admin/product.html" title="" class="nav-link">Đổi mật khẩu</a>
+                  <a href="/admin/update-password.html" title="" class="nav-link">Đổi mật khẩu</a>
                 </li>
               </ul>
             </li>
@@ -104,7 +104,7 @@
               </a>
               <ul class="sub-menu">
                 <li class="nav-item">
-                  <a href="/admin/add-user.html" title="" class="nav-link">Thêm khách hàng</a>
+                  <a href="/admin/add-edit-user.html" title="" class="nav-link">Thêm khách hàng</a>
                 </li>
                 <li class="nav-item">
                   <a href="/admin/users.html" title="" class="nav-link">Danh sách khách hàng</a>
@@ -144,13 +144,24 @@
                 </div>
                 <div class="input-group">
                   <label for="image">Hình ảnh</label>
-                  <input type="file" name="image" id="image" />
-                  <img src="https://placehold.co/200x200" alt="" id="imageUrl" />
+                  <div class="img-wrapper">
+                    <img src="https://placehold.co/200x200" alt="" id="imageUrl" />
+                    <div
+                      class="btn btn-primary btn--style"
+                      id="randomBtn"
+                      style="display: inline-block"
+                    >
+                      Đổi hình ảnh
+                    </div>
+                  </div>
                 </div>
                 <div class="input-group">
                   <label for="role">Vai trò</label>
-                  <select name="role" id="role"></select>
+                  <select name="roleID" id="role"></select>
                   <span class="invalid-feedback"></span>
+                </div>
+                <div class="input-group">
+                  <button type="submit">Cập nhật</button>
                 </div>
                 <div class="input-group">
                   <input type="hidden" name="imageUrl" />
@@ -167,6 +178,7 @@
         <p id="copyright">2024 © thaibaocoder1</p>
       </div>
     </div>
+    <script type="module" src="/js/admin/home.js"></script>
     <script type="module" src="/js/admin/account-update.js"></script>
   </body>
 </html>

@@ -2,11 +2,11 @@ import userApi from './api/userApi'
 import {
   addCartToDom,
   hideSpinner,
-  initUserForm,
   setBackgroundImage,
   setFieldValue,
   showSpinner,
   toast,
+  handleUpdateInfoUser,
 } from './utils'
 function displayTagLink(ulElement) {
   ulElement.textContent = ''
@@ -25,8 +25,10 @@ async function displayInfoUser(userID, divInfoLeftEl, userAvatarEl) {
     hideSpinner()
     setFieldValue(divInfoLeftEl, "input[name='fullname']", infoUser?.fullname)
     setFieldValue(divInfoLeftEl, "input[name='username']", infoUser?.username)
-    setFieldValue(divInfoLeftEl, "input[name='email']", infoUser?.email)
     setFieldValue(divInfoLeftEl, "input[name='phone']", infoUser?.phone)
+    setFieldValue(divInfoLeftEl, "input[name='email']", infoUser?.email)
+    setFieldValue(divInfoLeftEl, "input[name='password']", infoUser?.password)
+    setFieldValue(userAvatarEl, "input[name='imageUrl']", infoUser?.imageUrl)
     setBackgroundImage(userAvatarEl, 'img#avatar', infoUser?.imageUrl)
   } catch (error) {
     console.log('failed to fetch data', error)
@@ -67,21 +69,28 @@ function handleOnClick() {
       }, 2000)
     } else if (target.matches("a[title='Cập nhật thông tin']")) {
       window.location.assign('/update-info.html')
-      try {
-        const defaultValues = await userApi.getById(userID)
-        initUserForm({
-          formID: 'formUpdateUser',
-          defaultValues,
-          onSubmit: (formValues) => console.log('data', formValues),
-        })
-      } catch (e) {
-        console.log('error', e)
-      }
     } else if (target.matches("a[title='Quản lý đơn hàng']")) {
       window.location.assign('/order.html')
     }
   })
 }
+
+async function handleOnSubmitForm(formValues) {
+  try {
+    showSpinner()
+    const updateUser = await userApi.update(formValues)
+    hideSpinner()
+    if (updateUser) {
+      toast.success('Cập nhật thông tin thành công')
+      setTimeout(() => {
+        window.location.assign('/account.html')
+      }, 1000)
+    }
+  } catch (error) {
+    console.log('failed to fetch data', error)
+  }
+}
+
 // main
 ;(() => {
   // get cart from localStorage
@@ -128,4 +137,23 @@ function handleOnClick() {
     divInfoRight: 'userAvatar',
   })
   handleOnClick()
+  if (window.location.pathname === '/update-info.html') {
+    if (infoUserStorage.length === 1) {
+      const user = infoUserStorage[0]
+      handleUpdateInfoUser({
+        idForm: 'formUpdateUser',
+        user,
+        onSubmit: handleOnSubmitForm,
+      })
+    } else {
+      const user = infoUserStorage.find((user) => user?.roleID === 1)
+      if (user) {
+        handleUpdateInfoUser({
+          idForm: 'formUpdateUser',
+          user,
+          onSubmit: handleOnSubmitForm,
+        })
+      }
+    }
+  }
 })()

@@ -3,7 +3,8 @@ import { toast, checkLogoutAccount } from '../utils'
 function checkRoleAccount(infoUserStorage) {
   const hasRoleID2 = infoUserStorage.some((user) => user?.roleID === 2)
   if (hasRoleID2) {
-    toast.success('Chào mừng admin đã đăng nhập!')
+    if (window.location.pathname === '/admin/index.html')
+      toast.success('Chào mừng admin đã đăng nhập!')
   } else {
     window.location.assign('/admin/login.html')
   }

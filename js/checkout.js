@@ -60,7 +60,7 @@ async function handleCheckoutFormSubmit(formValues, userID, cart) {
   try {
     formValues['userID'] = userID
     formValues['orderDate'] = new Date().getTime()
-    formValues['orderStatus'] = 1
+    formValues['status'] = 1
     const listOrder = await orderApi.getAll()
     if (Array.isArray(listOrder)) {
       if (listOrder.length === 0) {
@@ -78,7 +78,7 @@ async function handleCheckoutFormSubmit(formValues, userID, cart) {
     toast.success('Thanh toán thành công')
     localStorage.setItem('cart', JSON.stringify(newCart))
     setTimeout(() => {
-      window.location.assign('/index.html')
+      window.location.assign('/order.html')
     }, 2000)
   } catch (error) {
     console.log('failed to checkout', error)

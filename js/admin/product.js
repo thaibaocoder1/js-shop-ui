@@ -31,7 +31,7 @@ async function renderListProductAdmin({ idElement }) {
       <td><span class="tbody-text">${formatCurrencyNumber(
         (item.price * (100 - Number.parseInt(item.discount))) / 100,
       )}</span></td>
-      <td><span class="tbody-text">${item.category_id}</span></td>
+      <td><span class="tbody-text">${item.quantity}</span></td>
       <td><span class="tbody-text">${
         Number.parseInt(item.quantity) <= 50
           ? 'Sắp hết hàng'

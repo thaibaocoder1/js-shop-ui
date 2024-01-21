@@ -97,3 +97,15 @@ form#formProduct > .input-group input {
   width: 90% !important;
   display: block;
 }
+.btn--style {
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.img-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0 15px;
+}

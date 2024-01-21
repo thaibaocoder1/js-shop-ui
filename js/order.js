@@ -1,9 +1,6 @@
-import userApi from './api/userApi'
 import orderApi from './api/orderApi'
-import { addCartToDom, hideSpinner, initUserForm, showSpinner, toast } from './utils'
+import { addCartToDom, hideSpinner, showSpinner, toast } from './utils'
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-dayjs.extend(relativeTime)
 function displayTagLink(ulElement) {
   ulElement.textContent = ''
   const infoArr = ['Cập nhật thông tin', 'Quản lý đơn hàng', 'Đăng xuất']
@@ -40,7 +37,11 @@ async function handleCancelOrder(orderID) {
     if (order) {
       const orderStatus = +order.status
       if (orderStatus === 1) {
-        await orderApi.delete(orderID)
+        const data = {
+          status: 4,
+          id: orderID,
+        }
+        await orderApi.update(data)
         isSuccess = true
       } else {
         toast.error('Không thể huỷ đơn hàng')
@@ -70,16 +71,6 @@ function handleOnClick() {
       }, 2000)
     } else if (target.matches("a[title='Cập nhật thông tin']")) {
       window.location.assign('/update-info.html')
-      try {
-        const defaultValues = await userApi.getById(userID)
-        initUserForm({
-          formID: 'formUpdateUser',
-          defaultValues,
-          onSubmit: (formValues) => console.log('data', formValues),
-        })
-      } catch (e) {
-        console.log('error', e)
-      }
     } else if (target.matches("a[title='Quản lý đơn hàng']")) {
       window.location.assign('/order.html')
     } else if (target.matches('#orderDetail')) {
@@ -90,8 +81,9 @@ function handleOnClick() {
       const isCancel = await handleCancelOrder(orderID)
       if (isCancel) {
         toast.success('Huỷ đơn hàng thành công')
-        const orderItem = target.parentElement.parentElement
-        orderItem && orderItem.remove()
+        const cancelBtn = target
+        cancelBtn.innerHTML = 'Đã huỷ'
+        cancelBtn.disabled = true
       }
     }
   })
@@ -100,7 +92,7 @@ function handleOnClick() {
 function displayStatus(status) {
   if (!status) return
   if (+status !== 1) {
-    return 'hidden'
+    return 'disabled'
   }
   return ''
 }
@@ -119,7 +111,7 @@ async function renderListOrder({ idTable, infoUserStorage }) {
       const userID = user.user_id
       const listOrderApply = orders.filter((order) => order.userID === userID)
       if (listOrderApply.length === 0) {
-        toast.info('Bạn chưa mua đơn hàng nào')
+        toast.info('Bạn chưa có đơn hàng nào')
         return
       }
       listOrderApply.forEach((item, index) => {
@@ -129,14 +121,22 @@ async function renderListOrder({ idTable, infoUserStorage }) {
         <td>${item.fullname}</td>
         <td>${item.email}</td>
         <td>${item.phone}</td>
-        <td>${dayjs(item.orderDate).fromNow()}</td>
+        <td>${dayjs(item.orderDate).format('DD/MM/YYYY')}</td>
         <td>
-          <button type="button" class="btn btn-primary" id="orderDetail" data-id="${
+          <button type="button" class="btn btn-primary btn--style" id="orderDetail" data-id="${
             item.id
           }">Chi tiết</button>
           <button type="button" id="cancelOrder" data-id="${
             item.id
-          }" class="btn btn-danger" ${displayStatus(item.status)} >Huỷ đơn</button>
+          }" class="btn btn-danger btn--style" ${displayStatus(item.status)}>${
+          +item.status === 1
+            ? 'Huỷ đơn'
+            : +item.status === 4
+            ? 'Đã huỷ'
+            : +item.status === 2
+            ? 'Đang vận chuyển'
+            : 'Đã nhận hàng'
+        }</button>
         </td>`
         tbodyEl.appendChild(tableRow)
       })

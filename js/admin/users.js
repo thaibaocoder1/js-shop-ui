@@ -1,5 +1,5 @@
 import userApi from '../api/userApi'
-import { hideSpinner, showSpinner } from '../utils'
+import { hideSpinner, initSearchInput, showSpinner } from '../utils'
 
 async function renderListUser({ idTable, idBreadcrumb }) {
   const table = document.getElementById(idTable)
@@ -35,8 +35,18 @@ async function renderListUser({ idTable, idBreadcrumb }) {
 }
 // main
 ;(() => {
+  initSearchInput({
+    idElement: 'searchInput',
+  })
   renderListUser({
     idTable: 'listUserTable',
     idBreadcrumb: 'breadcrumbUser',
+  })
+  document.addEventListener('click', function (e) {
+    const { target } = e
+    if (target.matches('#editUser')) {
+      const userID = +target.dataset.id
+      window.location.assign(`/admin/add-edit-user.html?id=${userID}`)
+    }
   })
 })()

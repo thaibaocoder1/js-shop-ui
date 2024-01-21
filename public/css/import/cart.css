@@ -162,3 +162,10 @@ input[name='filter-btn']:hover {
   padding: 5px 15px;
   border-radius: 6px;
 }
+.btn--style {
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}

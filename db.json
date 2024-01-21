@@ -50,8 +50,89 @@
       "productID": 1
     }
   ],
-  "order": [],
-  "orderDetails": [],
+  "order": [
+    {
+      "fullname": "Hoàng Bảo",
+      "email": "thaibaok4.1@gmail.com",
+      "address": "https://www.google.com/maps?q=10.7905024,106.6827776",
+      "phone": "0852343047",
+      "note": "",
+      "userID": 1,
+      "orderDate": 1705670302589,
+      "status": 1,
+      "id": 1
+    },
+    {
+      "fullname": "Bang Nhi",
+      "email": "admink4.1@gmail.com",
+      "address": "https://www.google.com/maps?q=10.7905024,106.6827776",
+      "phone": "0852343047",
+      "note": "",
+      "userID": 2,
+      "orderDate": 1705671611044,
+      "status": 4,
+      "id": 2
+    },
+    {
+      "fullname": "Hoàng Bảo",
+      "email": "admink4.1@gmail.com",
+      "address": "https://www.google.com/maps?q=10.7905024,106.6827776",
+      "phone": "0852343047",
+      "note": "",
+      "userID": 2,
+      "orderDate": 1705674432577,
+      "status": "4",
+      "id": 3
+    }
+  ],
+  "orderDetails": [
+    {
+      "productID": 1,
+      "quantity": 1,
+      "userID": 1,
+      "isChecked": true,
+      "price": 8900100,
+      "orderID": 1,
+      "id": 1
+    },
+    {
+      "productID": 2,
+      "quantity": 1,
+      "userID": 1,
+      "isChecked": true,
+      "price": 7992000,
+      "orderID": 1,
+      "id": 2
+    },
+    {
+      "productID": 14,
+      "quantity": 1,
+      "userID": 2,
+      "isChecked": true,
+      "price": 5912000,
+      "orderID": 2,
+      "id": 3
+    },
+    {
+      "productID": 15,
+      "quantity": 1,
+      "userID": 2,
+      "isChecked": true,
+      "price": 5752000,
+      "orderID": 2,
+      "id": 4
+    },
+    {
+      "productID": 13,
+      "quantity": 1,
+      "userID": 2,
+      "isBuyNow": true,
+      "isChecked": true,
+      "price": 6792000,
+      "orderID": 3,
+      "id": 5
+    }
+  ],
   "products": [
     {
       "id": 1,
@@ -337,24 +418,24 @@
   "users": [
     {
       "fullname": "Hoàng Bảo",
-      "username": "admin",
-      "email": "thaibaok4.1@gmail.com",
+      "username": "baohoang",
+      "email": "baohoang@gmail.com",
       "phone": "0852343047",
       "password": "123456",
       "password_confirmation": "123456",
-      "roleID": 1,
-      "imageUrl": "https://picsum.photos/id/407/300/300",
+      "roleID": "1",
+      "imageUrl": "https://picsum.photos/id/687/300/300",
       "id": 1
     },
     {
-      "fullname": "Hoàng Bảo",
+      "fullname": "Nguyen Van Admin",
       "username": "admin",
       "email": "admink4.1@gmail.com",
       "phone": "0852343047",
-      "password": "123456",
-      "password_confirmation": "123456",
-      "roleID": 2,
-      "imageUrl": "https://picsum.photos/id/407/300/300",
+      "password": "123456789",
+      "password_confirmation": "123456789",
+      "roleID": "2",
+      "imageUrl": "https://picsum.photos/id/625/300/300",
       "id": 2
     }
   ],

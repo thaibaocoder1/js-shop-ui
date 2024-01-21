@@ -1,13 +1,6 @@
 import userApi from './api/userApi'
 import orderDetailApi from './api/orderDetailApi'
-import {
-  addCartToDom,
-  formatCurrencyNumber,
-  hideSpinner,
-  initUserForm,
-  showSpinner,
-  toast,
-} from './utils'
+import { addCartToDom, formatCurrencyNumber, hideSpinner, showSpinner, toast } from './utils'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import productApi from './api/productsApi'
@@ -56,16 +49,6 @@ function handleOnClick() {
       }, 2000)
     } else if (target.matches("a[title='Cập nhật thông tin']")) {
       window.location.assign('/update-info.html')
-      try {
-        const defaultValues = await userApi.getById(userID)
-        initUserForm({
-          formID: 'formUpdateUser',
-          defaultValues,
-          onSubmit: (formValues) => console.log('data', formValues),
-        })
-      } catch (e) {
-        console.log('error', e)
-      }
     } else if (target.matches("a[title='Quản lý đơn hàng']")) {
       window.location.assign('/order.html')
     } else if (target.matches('#orderDetail')) {

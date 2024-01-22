@@ -49,6 +49,10 @@ async function renderDetailProduct({
           : 'Còn hàng'
       }</span>
     </div>
+    <div class="num-product">
+      <span class="title">Số lượng: </span>
+      <span>${data.quantity} sản phẩm</span>
+    </div>
     <p class="price">${formatCurrencyNumber(
       (data.price * (100 - Number.parseInt(data.discount))) / 100,
     )}</p>

@@ -1,4 +1,6 @@
 import orderApi from './api/orderApi'
+import orderDetailApi from './api/orderDetailApi'
+import productApi from './api/productsApi'
 import { addCartToDom, hideSpinner, showSpinner, toast } from './utils'
 import dayjs from 'dayjs'
 function displayTagLink(ulElement) {
@@ -33,6 +35,8 @@ async function handleCancelOrder(orderID) {
   try {
     showSpinner()
     const order = await orderApi.getById(orderID)
+    const orderDetail = await orderDetailApi.getAll()
+    const orderDetailApply = orderDetail.filter((item) => item.orderID === orderID)
     hideSpinner()
     if (order) {
       const orderStatus = +order.status
@@ -42,6 +46,15 @@ async function handleCancelOrder(orderID) {
           id: orderID,
         }
         await orderApi.update(data)
+        for (const item of orderDetailApply) {
+          const { productID, quantity } = item
+          const productInfo = await productApi.getById(productID)
+          const payload = {
+            id: productID,
+            quantity: +productInfo.quantity + quantity,
+          }
+          await productApi.update(payload)
+        }
         isSuccess = true
       } else {
         toast.error('Không thể huỷ đơn hàng')
@@ -142,8 +155,39 @@ async function renderListOrder({ idTable, infoUserStorage }) {
       })
     } else {
       const user = infoUserStorage.find((user) => user?.roleID === 1)
+      const userID = user?.user_id
       if (user) {
-        console.log('user with id = 1')
+        const listOrderApply = orders.filter((order) => order.userID === userID)
+        if (listOrderApply.length === 0) {
+          toast.info('Bạn chưa có đơn hàng nào')
+          return
+        }
+        listOrderApply.forEach((item, index) => {
+          const tableRow = document.createElement('tr')
+          tableRow.dataset.id = item.id
+          tableRow.innerHTML = `<th scope="row">${index + 1}</th>
+          <td>${item.fullname}</td>
+          <td>${item.email}</td>
+          <td>${item.phone}</td>
+          <td>${dayjs(item.orderDate).format('DD/MM/YYYY')}</td>
+          <td>
+            <button type="button" class="btn btn-primary btn--style" id="orderDetail" data-id="${
+              item.id
+            }">Chi tiết</button>
+            <button type="button" id="cancelOrder" data-id="${
+              item.id
+            }" class="btn btn-danger btn--style" ${displayStatus(item.status)}>${
+            +item.status === 1
+              ? 'Huỷ đơn'
+              : +item.status === 4
+              ? 'Đã huỷ'
+              : +item.status === 2
+              ? 'Đang vận chuyển'
+              : 'Đã nhận hàng'
+          }</button>
+          </td>`
+          tbodyEl.appendChild(tableRow)
+        })
       }
     }
   } catch (error) {

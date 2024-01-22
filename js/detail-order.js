@@ -105,7 +105,33 @@ async function renderListOrder({ idTable, infoUserStorage, orderID }) {
     } else {
       const user = infoUserStorage.find((user) => user?.roleID === 1)
       if (user) {
-        console.log('user with id = 1')
+        const listOrderApply = orderDetail.filter((order) => order.orderID === orderID)
+        if (listOrderApply.length === 0) {
+          toast.info('Bạn chưa mua đơn hàng nào')
+          return
+        }
+        listOrderApply.forEach(async (item, index) => {
+          const infoProduct = await productApi.getById(item.productID)
+          const tableRow = document.createElement('tr')
+          const price =
+            infoProduct.price *
+            ((100 - Number.parseInt(infoProduct.discount)) / 100) *
+            item.quantity
+          tableRow.innerHTML = `<th scope="row">${index + 1}</th>
+        <td>${item.orderID}</td>
+        <td>${item.userID}</td>
+        <td><a href="/product-detail.html?id=${infoProduct.id}">${infoProduct.name}</a></td>
+        <td>
+          <img src="/public/images/${infoProduct.thumb}" alt="${
+            infoProduct.name
+          }" style="width: 150px;
+          height: 150px; object-fit: cover;" />
+        </td>
+        <td>${formatCurrencyNumber(price)}</td>
+        <td>${item.quantity}</td>
+       `
+          tbodyEl.appendChild(tableRow)
+        })
       }
     }
   } catch (error) {

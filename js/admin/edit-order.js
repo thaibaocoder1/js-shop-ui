@@ -1,6 +1,9 @@
 import orderApi from '../api/orderApi'
+import orderDetailApi from '../api/orderDetailApi'
+import productApi from '../api/productsApi'
 import { showSpinner, hideSpinner, setFieldValue, setFieldError, toast } from '../utils'
 import * as yup from 'yup'
+import dayjs from 'dayjs'
 
 function setFormValues(form, orderInfo) {
   if (!form || !orderInfo) return
@@ -104,9 +107,33 @@ async function displayOrderInfo({ idForm, orderID, onSubmit }) {
   }
 }
 
+function calcDateOrder(dateOrder, formatDate) {
+  const timeDifference = formatDate - dateOrder
+  const secondOfDay = 86400 * 1000
+  return timeDifference > secondOfDay
+}
+
 async function handleOnSubmitForm(formValues) {
   try {
     const updateOrder = await orderApi.update(formValues)
+    const orderID = updateOrder.id
+    const dateOrder = updateOrder.orderDate
+    const formatDate = new Date().getTime()
+    const checkDate = calcDateOrder(dateOrder, formatDate)
+    if (+updateOrder?.status === 4 || checkDate) {
+      const orderDetail = await orderDetailApi.getAll()
+      const orderDetailApply = orderDetail.filter((order) => order.orderID === orderID)
+      for (const item of orderDetailApply) {
+        const { productID, quantity } = item
+        const productInfo = await productApi.getById(productID)
+        const payload = {
+          id: productID,
+          quantity: +productInfo.quantity + quantity,
+        }
+        await productApi.update(payload)
+      }
+    }
+
     if (updateOrder) {
       toast.success('Cập nhật đơn hàng thành công')
       setTimeout(() => {

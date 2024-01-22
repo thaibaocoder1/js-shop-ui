@@ -1,5 +1,5 @@
 import productApi from '../api/productsApi'
-import { formatCurrencyNumber, hideSpinner, showSpinner } from '../utils'
+import { formatCurrencyNumber, hideSpinner, initSearchInputProduct, showSpinner } from '../utils'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
@@ -52,6 +52,10 @@ async function renderListProductAdmin({ idElement }) {
 }
 // main
 ;(() => {
+  initSearchInputProduct({
+    idElement: 'searchInput',
+    idTable: 'listProductTable',
+  })
   renderListProductAdmin({
     idElement: 'listProductTable',
   })

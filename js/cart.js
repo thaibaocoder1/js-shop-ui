@@ -51,6 +51,20 @@ async function addCartToDom({ idListCart, cart, userID, idNumOrder, idNum, idTot
   }
 }
 
+function updateTotal(checkedProducts) {
+  let totalTemp
+  if (checkedProducts.length > 0) {
+    totalTemp = checkedProducts.reduce((total, item) => {
+      return total + item.quantity * item.price
+    }, 0)
+  } else {
+    totalTemp = 0
+  }
+  document.getElementById('total-price').innerHTML = `Tổng thanh toán: <span>${formatCurrencyNumber(
+    totalTemp,
+  )}</span>`
+}
+
 async function renderListProductInCart({ idTable, cart, idTotalPrice, infoUserStorage }) {
   const tableElement = document.getElementById(idTable)
   if (!tableElement) return
@@ -60,6 +74,8 @@ async function renderListProductInCart({ idTable, cart, idTotalPrice, infoUserSt
     showSpinner()
     const products = await productApi.getAll()
     hideSpinner()
+    let checkedProducts = cart.filter((item) => item.isChecked)
+    updateTotal(checkedProducts)
     cart?.forEach((item) => {
       if (+item.userID === +infoUserStorage.user_id) {
         const tableRowElement = document.createElement('tr')

@@ -51,6 +51,11 @@ async function handleAddOrder(orderID, formValues, cart) {
       const product = await productApi.getById(item.productID)
       item['orderID'] = orderID
       item['price'] = (product.price * (100 - Number.parseInt(product.discount))) / 100
+      const payload = {
+        id: item.productID,
+        quantity: +product.quantity - item.quantity,
+      }
+      await productApi.update(payload)
       await orderDetailApi.add(item)
     }
   }

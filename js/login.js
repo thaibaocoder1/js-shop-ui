@@ -12,7 +12,7 @@ async function handleOnSubmitForm(data) {
       if (user.email === data.email && user.password === data.password) {
         isChecked = true
         toast.success('Đăng nhập thành công')
-        if (user.roleID === 1) {
+        if (+user.roleID === 1) {
           infoUser.push({
             access_token: `Bearer ${new Date().getTime()}`,
             user_id: user.id,

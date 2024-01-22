@@ -53,36 +53,14 @@
   "order": [
     {
       "fullname": "Hoàng Bảo",
-      "email": "thaibaok4.1@gmail.com",
-      "address": "https://www.google.com/maps?q=10.7905024,106.6827776",
+      "email": "baohoang@gmail.com",
+      "address": "https://www.google.com/maps?q=10.8033121,106.6386977",
       "phone": "0852343047",
       "note": "",
       "userID": 1,
-      "orderDate": 1705670302589,
-      "status": 1,
-      "id": 1
-    },
-    {
-      "fullname": "Bang Nhi",
-      "email": "admink4.1@gmail.com",
-      "address": "https://www.google.com/maps?q=10.7905024,106.6827776",
-      "phone": "0852343047",
-      "note": "",
-      "userID": 2,
-      "orderDate": 1705671611044,
+      "orderDate": 1705905470808,
       "status": 4,
-      "id": 2
-    },
-    {
-      "fullname": "Hoàng Bảo",
-      "email": "admink4.1@gmail.com",
-      "address": "https://www.google.com/maps?q=10.7905024,106.6827776",
-      "phone": "0852343047",
-      "note": "",
-      "userID": 2,
-      "orderDate": 1705674432577,
-      "status": "4",
-      "id": 3
+      "id": 1
     }
   ],
   "orderDetails": [
@@ -103,34 +81,6 @@
       "price": 7992000,
       "orderID": 1,
       "id": 2
-    },
-    {
-      "productID": 14,
-      "quantity": 1,
-      "userID": 2,
-      "isChecked": true,
-      "price": 5912000,
-      "orderID": 2,
-      "id": 3
-    },
-    {
-      "productID": 15,
-      "quantity": 1,
-      "userID": 2,
-      "isChecked": true,
-      "price": 5752000,
-      "orderID": 2,
-      "id": 4
-    },
-    {
-      "productID": 13,
-      "quantity": 1,
-      "userID": 2,
-      "isBuyNow": true,
-      "isChecked": true,
-      "price": 6792000,
-      "orderID": 3,
-      "id": 5
     }
   ],
   "products": [
@@ -145,7 +95,7 @@
       "thumb": "img-pro-16.png",
       "content": "<p>San pham 1</p>\n",
       "status": 1,
-      "quantity": "250",
+      "quantity": 250,
       "timer": 1705472234347
     },
     {
@@ -411,7 +361,7 @@
       "thumb": "iphone-7.jpg",
       "content": "<p>San pham 20</p>\n",
       "status": 1,
-      "quantity": 200,
+      "quantity": 250,
       "timer": 1705416751279
     }
   ],

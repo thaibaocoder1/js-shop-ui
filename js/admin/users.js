@@ -7,6 +7,7 @@ async function renderListUser({ idTable, idBreadcrumb }) {
   if (!table || !breadcrumbUserEl) return
   const tbody = table.getElementsByTagName('tbody')[0]
   if (!tbody) return
+  tbody.textContent = ''
   try {
     showSpinner()
     const users = await userApi.getAll()
@@ -37,6 +38,7 @@ async function renderListUser({ idTable, idBreadcrumb }) {
 ;(() => {
   initSearchInput({
     idElement: 'searchInput',
+    idTable: 'listUserTable',
   })
   renderListUser({
     idTable: 'listUserTable',

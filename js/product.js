@@ -9,9 +9,11 @@ import {
   sweetAlert,
   addProductToCart,
   toast,
+  initSearchForm,
+  initFormFilter,
 } from './utils'
 
-async function renderListProduct({ selector, selectorCount }) {
+async function renderListProduct({ selector, selectorCount, searchValueUrl }) {
   const ulElement = document.querySelector(selector)
   const countProductEl = document.querySelector(selectorCount)
   if (!ulElement || !countProductEl) return
@@ -20,35 +22,95 @@ async function renderListProduct({ selector, selectorCount }) {
     showSpinner()
     const data = await productApi.getAll()
     hideSpinner()
-    data.forEach((item) => {
-      const liElement = document.createElement('li')
-      liElement.dataset.id = item.id
-      liElement.innerHTML = `<a href="/product-detail.html?id=${item.id}" title="" class="thumb">
-      <img src="public/images/${item.thumb}" alt="${item.name}" />
-      </a>
-      <a href="/product-detail.html" title="" class="product-name">${item.name}</a>
-      <div class="price">
-        <span class="new">${formatCurrencyNumber(
-          (item.price * (100 - Number.parseInt(item.discount))) / 100,
-        )}</span>
-        <span class="old">${formatCurrencyNumber(item.price)}</span>
-    </div>
-      <div class="action clearfix action--custom">
-        ${
-          Number.parseInt(item.quantity) > 0 && Number.parseInt(item.status) === 1
-            ? `<a href="/cart.html" title="Thêm giỏ hàng" class="add-cart fl-left">Thêm giỏ hàng</a>
-        <a title="Mua ngay" class="buy-now fl-right">Mua ngay</a>`
-            : `<span>Hết hàng</span>`
-        }
-      </div>`
-      ulElement.appendChild(liElement)
-    })
-    countProductEl.innerHTML = `Hiển thị ${data.length} trên ${data.length} sản phẩm`
+    const dataFilter = data.slice(0, 8)
+    let dataApply = []
+    if (searchValueUrl !== null) {
+      dataApply = data.filter((item) =>
+        item?.name.toLowerCase().includes(searchValueUrl.toLowerCase()),
+      )
+    }
+    if (dataApply.length > 0) {
+      dataApply.forEach((item) => {
+        const liElement = document.createElement('li')
+        liElement.dataset.id = item.id
+        liElement.innerHTML = `<a href="/product-detail.html?id=${item.id}" title="" class="thumb">
+        <img src="public/images/${item.thumb}" alt="${item.name}" />
+        </a>
+        <a href="/product-detail.html" title="" class="product-name">${item.name}</a>
+        <div class="price">
+          <span class="new">${formatCurrencyNumber(
+            (item.price * (100 - Number.parseInt(item.discount))) / 100,
+          )}</span>
+          <span class="old">${formatCurrencyNumber(item.price)}</span>
+      </div>
+        <div class="action clearfix action--custom">
+          ${
+            Number.parseInt(item.quantity) > 0 && Number.parseInt(item.status) === 1
+              ? `<a href="/cart.html" title="Thêm giỏ hàng" class="add-cart fl-left">Thêm giỏ hàng</a>
+          <a title="Mua ngay" class="buy-now fl-right">Mua ngay</a>`
+              : `<span>Hết hàng</span>`
+          }
+        </div>`
+        ulElement.appendChild(liElement)
+      })
+      countProductEl.innerHTML = `Hiển thị ${dataApply.length} trên ${dataApply.length} sản phẩm`
+    } else {
+      dataFilter.forEach((item) => {
+        const liElement = document.createElement('li')
+        liElement.dataset.id = item.id
+        liElement.innerHTML = `<a href="/product-detail.html?id=${item.id}" title="" class="thumb">
+        <img src="public/images/${item.thumb}" alt="${item.name}" />
+        </a>
+        <a href="/product-detail.html" title="" class="product-name">${item.name}</a>
+        <div class="price">
+          <span class="new">${formatCurrencyNumber(
+            (item.price * (100 - Number.parseInt(item.discount))) / 100,
+          )}</span>
+          <span class="old">${formatCurrencyNumber(item.price)}</span>
+      </div>
+        <div class="action clearfix action--custom">
+          ${
+            Number.parseInt(item.quantity) > 0 && Number.parseInt(item.status) === 1
+              ? `<a href="/cart.html" title="Thêm giỏ hàng" class="add-cart fl-left">Thêm giỏ hàng</a>
+          <a title="Mua ngay" class="buy-now fl-right">Mua ngay</a>`
+              : `<span>Hết hàng</span>`
+          }
+        </div>`
+        ulElement.appendChild(liElement)
+      })
+      countProductEl.innerHTML = `Hiển thị ${data.length} trên ${data.length} sản phẩm`
+    }
   } catch (error) {
     console.log('failed to fetch data', error)
   }
 }
-
+async function renderListFilter(value) {
+  const ulElement = document.querySelector('#listProduct')
+  ulElement.textContent = ''
+  value.forEach((item) => {
+    const liElement = document.createElement('li')
+    liElement.dataset.id = item.id
+    liElement.innerHTML = `<a href="/product-detail.html?id=${item.id}" title="" class="thumb">
+    <img src="public/images/${item.thumb}" alt="${item.name}" />
+    </a>
+    <a href="/product-detail.html" title="" class="product-name">${item.name}</a>
+    <div class="price">
+      <span class="new">${formatCurrencyNumber(
+        (item.price * (100 - Number.parseInt(item.discount))) / 100,
+      )}</span>
+      <span class="old">${formatCurrencyNumber(item.price)}</span>
+  </div>
+    <div class="action clearfix action--custom">
+      ${
+        Number.parseInt(item.quantity) > 0 && Number.parseInt(item.status) === 1
+          ? `<a href="/cart.html" title="Thêm giỏ hàng" class="add-cart fl-left">Thêm giỏ hàng</a>
+      <a title="Mua ngay" class="buy-now fl-right">Mua ngay</a>`
+          : `<span>Hết hàng</span>`
+      }
+    </div>`
+    ulElement.appendChild(liElement)
+  })
+}
 // main
 ;(() => {
   renderListCategory('#listCategory')
@@ -102,6 +164,31 @@ async function renderListProduct({ selector, selectorCount }) {
     renderListProduct({
       selector: '#listProduct',
       selectorCount: '#countProduct',
+      searchValueUrl: searchParams.get('searchTerm'),
+    })
+  }
+  if (Boolean(searchParams.get('searchTerm'))) {
+    const searchValueUrl = searchParams.get('searchTerm')
+    initSearchForm({
+      idForm: 'searchForm',
+      idElement: 'searchList',
+      searchValueUrl,
+    })
+    // form filter
+    initFormFilter({
+      idForm: 'formFilter',
+      searchValueUrl,
+      onChange: renderListFilter,
+    })
+  } else {
+    initSearchForm({
+      idForm: 'searchForm',
+      idElement: 'searchList',
+    })
+    // form filter
+    initFormFilter({
+      idForm: 'formFilter',
+      onChange: renderListFilter,
     })
   }
   // event delegations
@@ -156,6 +243,12 @@ async function renderListProduct({ selector, selectorCount }) {
           window.location.assign('/login.html')
         }, 2000)
       }
+    } else if (target.matches('#loadMoreBtn')) {
+      showSpinner()
+      const products = await productApi.getAll()
+      hideSpinner()
+      const productApply = products.slice(7, 15)
+      await renderListFilter(productApply)
     }
   })
 })()

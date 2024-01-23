@@ -6,6 +6,7 @@ import {
   addProductToCart,
   formatCurrencyNumber,
   hideSpinner,
+  initSearchForm,
   initSwiper,
   renderListCategory,
   showSpinner,
@@ -234,6 +235,10 @@ async function handleOnSubmitForm(value, productID, userID) {
   renderListComment({
     idElement: 'comments',
     productID,
+  })
+  initSearchForm({
+    idForm: 'searchForm',
+    idElement: 'searchList',
   })
   // event delegations
   document.addEventListener('click', async function (e) {

@@ -7,6 +7,7 @@ import {
   showSpinner,
   toast,
   handleUpdateInfoUser,
+  initSearchForm,
 } from './utils'
 function displayTagLink(ulElement) {
   ulElement.textContent = ''
@@ -135,6 +136,10 @@ async function handleOnSubmitForm(formValues) {
     infoUserStorage,
     divInfoLeft: 'userInfo',
     divInfoRight: 'userAvatar',
+  })
+  initSearchForm({
+    idForm: 'searchForm',
+    idElement: 'searchList',
   })
   handleOnClick()
   if (window.location.pathname === '/update-info.html') {

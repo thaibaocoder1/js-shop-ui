@@ -1,7 +1,7 @@
 import orderApi from './api/orderApi'
 import orderDetailApi from './api/orderDetailApi'
 import productApi from './api/productsApi'
-import { addCartToDom, hideSpinner, showSpinner, toast } from './utils'
+import { addCartToDom, hideSpinner, initSearchForm, showSpinner, toast } from './utils'
 import dayjs from 'dayjs'
 function displayTagLink(ulElement) {
   ulElement.textContent = ''
@@ -233,6 +233,10 @@ async function renderListOrder({ idTable, infoUserStorage }) {
       }
     })
   }
+  initSearchForm({
+    idForm: 'searchForm',
+    idElement: 'searchList',
+  })
   renderInfoAccount({
     idElement: 'accountUser',
     infoUserStorage,

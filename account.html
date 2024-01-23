@@ -63,10 +63,18 @@
                 ><img src="public/images/logo.png"
               /></a>
               <div id="search-wp" class="fl-left">
-                <form method="POST" action="">
-                  <input type="text" name="s" id="s" placeholder="Nhập từ khóa tìm kiếm tại đây!" />
-                  <button type="submit" id="sm-s">Tìm kiếm</button>
-                </form>
+                <div class="search-wrapper">
+                  <form action="/products.html" id="searchForm">
+                    <input
+                      type="text"
+                      name="searchTerm"
+                      id="s"
+                      placeholder="Nhập từ khóa tìm kiếm tại đây!"
+                    />
+                    <button type="submit" id="sm-s">Tìm kiếm</button>
+                  </form>
+                  <section class="search" id="searchList"></section>
+                </div>
               </div>
               <div id="action-wp" class="fl-right">
                 <div id="advisory-wp" class="fl-left">

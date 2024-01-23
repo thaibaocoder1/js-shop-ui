@@ -6,6 +6,7 @@ import {
   formatCurrencyNumber,
   hideSpinner,
   initFormCheckout,
+  initSearchForm,
   showSpinner,
   toast,
 } from './utils'
@@ -160,6 +161,10 @@ async function handleCheckoutFormSubmit(formValues, userID, cart) {
       }
     })
   }
+  initSearchForm({
+    idForm: 'searchForm',
+    idElement: 'searchList',
+  })
   document.addEventListener('DOMContentLoaded', function () {
     navigator.geolocation.getCurrentPosition(
       async function (position) {

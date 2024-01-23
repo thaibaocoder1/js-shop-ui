@@ -1,4 +1,6 @@
 import productApi from '../api/productsApi'
+import { formatCurrencyNumber } from './format'
+import { hideSpinner, showSpinner } from './spinner'
 import { toast } from './toast'
 import debounce from 'lodash.debounce'
 
@@ -9,46 +11,111 @@ export async function renderListProductSearch(listProduct, search) {
     const searchItem = document.createElement('search')
     searchItem.classList.add('search-item')
     searchItem.innerHTML = `<figure class="search-thumb">
-    <img src="public/images/${item.thumb}" alt="${item.name}" class="search-img" />
+    <a href="/product-detail.html?id=${item.id}">
+      <img src="public/images/${item.thumb}" alt="${item.name}" class="search-img" />
+    </a>
     </figure>
     <div class="search-content">
-      <h3 class="search-name">${item.name}</h3>
+      <h3 class="search-name">
+        <a href="/product-detail.html?id=${item.id}">${item.name}</a>
+      </h3>
       <div class="search-price">
-        <span>Giá gốc</span>
-        <span style="text-decoration: line-through">Giá giảm</span>
+        <span>${formatCurrencyNumber(
+          item.price * ((100 - Number.parseInt(item.discount)) / 100),
+        )}</span>
+        <span style="font-size: 12px;">Giảm ${item.discount}%</span>
       </div>
     </div>`
     search.appendChild(searchItem)
   })
 }
 
-export function initSearchForm({ idForm, idElement }) {
+export function initSearchForm({ idForm, idElement, searchValueUrl }) {
   const form = document.getElementById(idForm)
   const search = document.getElementById(idElement)
   if (!form || !search) return
   const searchTerm = form.querySelector("[name='searchTerm']")
+  if (searchValueUrl && searchValueUrl.length > 0) {
+    searchTerm.value = searchValueUrl
+  }
   const debounceSearch = debounce(async (e) => {
     const { target } = e
-    const searchValue = target.value
+    const value = target.value
     let productApply = []
-    if (searchValue.length === 0) {
+    if (value.length === 0) {
+      search.textContent = ''
       await renderListProductSearch(productApply, search)
     } else {
       const products = await productApi.getAll()
       productApply = products.filter((item) =>
-        item?.name.toLowerCase().includes(searchValue.toLowerCase()),
+        item?.name.toLowerCase().includes(value.toLowerCase()),
       )
       await renderListProductSearch(productApply, search)
     }
   }, 500)
   searchTerm.addEventListener('input', debounceSearch)
   form.addEventListener('submit', function (e) {
-    e.preventDefault()
     const searchValue = this.elements['searchTerm'].value
-    if (searchValue.length === 0) {
+    if (searchValue === '' && window.location.pathname === '/index.html') {
+      e.preventDefault()
       toast.error('Phải nhập vào thông tin tìm kiếm')
-      return
     }
-    console.log(searchValue)
   })
+}
+
+export function initFormFilter({ idForm, searchValueUrl, onChange }) {
+  const form = document.getElementById(idForm)
+  if (!form) return
+  const selectEl = form.querySelector("[name='select']")
+  form.addEventListener('submit', function (e) {
+    e.preventDefault()
+  })
+  if (selectEl) {
+    selectEl.addEventListener('change', async function (e) {
+      showSpinner()
+      const products = await productApi.getAll()
+      hideSpinner()
+      let productApply = []
+      let productClone = [...products]
+      if (searchValueUrl !== null) {
+        productClone = products.filter((item) =>
+          item?.name.toLowerCase().includes(searchValueUrl.toLowerCase()),
+        )
+      }
+      const value = +e.target.value
+      switch (value) {
+        case 1:
+          productApply = productClone.sort((a, b) => {
+            const nameA = a.name.toUpperCase()
+            const nameB = b.name.toUpperCase()
+            return nameB > nameA ? -1 : 1
+          })
+          break
+        case 2:
+          productApply = productClone.sort((a, b) => {
+            const nameA = a.name.toUpperCase()
+            const nameB = b.name.toUpperCase()
+            return nameB > nameA ? 1 : -1
+          })
+          break
+        case 3:
+          productApply = productClone.sort((a, b) => {
+            const priceA = a.price * ((100 - Number.parseInt(a.discount)) / 100)
+            const priceB = b.price * ((100 - Number.parseInt(b.discount)) / 100)
+            return priceB - priceA
+          })
+          break
+        case 4:
+          productApply = productClone.sort((a, b) => {
+            const priceA = a.price * ((100 - Number.parseInt(a.discount)) / 100)
+            const priceB = b.price * ((100 - Number.parseInt(b.discount)) / 100)
+            return priceA - priceB
+          })
+          break
+        default:
+          break
+      }
+      await onChange?.(productApply)
+    })
+  }
 }

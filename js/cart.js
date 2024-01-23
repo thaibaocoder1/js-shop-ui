@@ -3,6 +3,7 @@ import {
   formatCurrencyNumber,
   handleChangeQuantity,
   hideSpinner,
+  initSearchForm,
   showSpinner,
   sweetAlert,
   toast,
@@ -179,6 +180,10 @@ async function renderListProductInCart({ idTable, cart, idTotalPrice, infoUserSt
   } else {
     document.getElementById('btn-remove-product').hidden = true
   }
+  initSearchForm({
+    idForm: 'searchForm',
+    idElement: 'searchList',
+  })
   document.addEventListener('click', async function (e) {
     if (e.target.matches('#btn-buy-product')) {
       window.location.assign('/products.html')

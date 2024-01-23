@@ -1,6 +1,13 @@
 import userApi from './api/userApi'
 import orderDetailApi from './api/orderDetailApi'
-import { addCartToDom, formatCurrencyNumber, hideSpinner, showSpinner, toast } from './utils'
+import {
+  addCartToDom,
+  formatCurrencyNumber,
+  hideSpinner,
+  initSearchForm,
+  showSpinner,
+  toast,
+} from './utils'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import productApi from './api/productsApi'
@@ -181,6 +188,10 @@ async function renderListOrder({ idTable, infoUserStorage, orderID }) {
     idElement: 'accountUser',
     infoUserStorage,
     divInfoLeft: 'listOrderUser',
+  })
+  initSearchForm({
+    idForm: 'searchForm',
+    idElement: 'searchList',
   })
   const searchParams = new URLSearchParams(location.search)
   const orderID = +searchParams.get('id')

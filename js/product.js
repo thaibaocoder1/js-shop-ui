@@ -11,6 +11,7 @@ import {
   toast,
   initSearchForm,
   initFormFilter,
+  initFilterPrice,
 } from './utils'
 
 async function renderListProduct({ selector, selectorCount, searchValueUrl }) {
@@ -22,7 +23,6 @@ async function renderListProduct({ selector, selectorCount, searchValueUrl }) {
     showSpinner()
     const data = await productApi.getAll()
     hideSpinner()
-    const dataFilter = data.slice(0, 8)
     let dataApply = []
     if (searchValueUrl !== null) {
       dataApply = data.filter((item) =>
@@ -55,7 +55,7 @@ async function renderListProduct({ selector, selectorCount, searchValueUrl }) {
       })
       countProductEl.innerHTML = `Hiển thị ${dataApply.length} trên ${dataApply.length} sản phẩm`
     } else {
-      dataFilter.forEach((item) => {
+      data.forEach((item) => {
         const liElement = document.createElement('li')
         liElement.dataset.id = item.id
         liElement.innerHTML = `<a href="/product-detail.html?id=${item.id}" title="" class="thumb">
@@ -86,6 +86,7 @@ async function renderListProduct({ selector, selectorCount, searchValueUrl }) {
 }
 async function renderListFilter(value) {
   const ulElement = document.querySelector('#listProduct')
+  const countProductEl = document.querySelector('#countProduct')
   ulElement.textContent = ''
   value.forEach((item) => {
     const liElement = document.createElement('li')
@@ -110,6 +111,7 @@ async function renderListFilter(value) {
     </div>`
     ulElement.appendChild(liElement)
   })
+  countProductEl.innerHTML = `Hiển thị ${value.length} trên ${value.length} sản phẩm`
 }
 // main
 ;(() => {
@@ -191,6 +193,11 @@ async function renderListFilter(value) {
       onChange: renderListFilter,
     })
   }
+  // init filter price
+  initFilterPrice({
+    idForm: 'formFilterPrice',
+    onChange: renderListFilter,
+  })
   // event delegations
   document.addEventListener('click', async function (e) {
     const { target } = e
@@ -243,12 +250,6 @@ async function renderListFilter(value) {
           window.location.assign('/login.html')
         }, 2000)
       }
-    } else if (target.matches('#loadMoreBtn')) {
-      showSpinner()
-      const products = await productApi.getAll()
-      hideSpinner()
-      const productApply = products.slice(7, 15)
-      await renderListFilter(productApply)
     }
   })
 })()

@@ -77,7 +77,7 @@ export function initFormFilter({ idForm, searchValueUrl, onChange }) {
       hideSpinner()
       let productApply = []
       let productClone = [...products]
-      if (searchValueUrl !== null) {
+      if (searchValueUrl && searchValueUrl !== null) {
         productClone = products.filter((item) =>
           item?.name.toLowerCase().includes(searchValueUrl.toLowerCase()),
         )
@@ -116,6 +116,66 @@ export function initFormFilter({ idForm, searchValueUrl, onChange }) {
           break
       }
       await onChange?.(productApply)
+    })
+  }
+}
+
+const filters = {
+  priceMin: null,
+  priceMax: null,
+  brand: null,
+}
+
+function handleRadioChange(event, filterType) {
+  const value = event.target.value
+
+  if (filterType === 'price') {
+    const minMax = value.split('-')
+    filters.priceMin = minMax[0] ? parseInt(minMax[0]) : null
+    filters.priceMax = minMax[1] ? parseInt(minMax[1]) : null
+  } else {
+    filters[filterType] = value
+  }
+
+  return filters
+}
+
+export function initFilterPrice({ idForm, onChange }) {
+  const form = document.getElementById(idForm)
+  if (!form) return
+  const listRadio = form.querySelectorAll("input[type='radio']")
+  if (listRadio) {
+    ;[...listRadio].forEach((radio) => {
+      radio.addEventListener('click', async function (e) {
+        showSpinner()
+        const products = await productApi.getAll()
+        hideSpinner()
+        let productApply = []
+        const filterType = e.target.name.split('-')[1]
+        handleRadioChange(e, filterType)
+        if (Object.values(filters).every((value) => value !== null)) {
+          productApply = products.filter((item) => {
+            const price = item.price * ((100 - Number.parseInt(item.discount)) / 100)
+            const priceCondition = price >= filters.priceMin && price <= filters.priceMax
+            const brandCondition = item?.name.toLowerCase().includes(filters.brand.toLowerCase())
+            return priceCondition && brandCondition
+          })
+        } else {
+          if (filters.brand) {
+            const brandName = filters.brand
+            productApply = products.filter((item) =>
+              item?.name.toLowerCase().includes(brandName.toLowerCase()),
+            )
+          } else {
+            productApply = products.filter((item) => {
+              const price = item.price * ((100 - Number.parseInt(item.discount)) / 100)
+              const priceCondition = price >= filters.priceMin && price <= filters.priceMax
+              return priceCondition
+            })
+          }
+        }
+        await onChange?.(productApply)
+      })
     })
   }
 }

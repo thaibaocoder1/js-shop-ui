@@ -9,6 +9,7 @@ import {
   sweetAlert,
   displaySwiper,
   toast,
+  initSearchForm,
 } from './utils'
 import { renderListProductSeller } from './utils'
 
@@ -106,6 +107,10 @@ async function renderListProductWithName({ idElement, tagName }) {
   renderListProductWithName({
     idElement: '#listProductLaptop',
     tagName: 'laptop',
+  })
+  initSearchForm({
+    idForm: 'searchForm',
+    idElement: 'searchList',
   })
   // event delegations
   document.addEventListener('click', async function (e) {

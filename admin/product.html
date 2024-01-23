@@ -125,40 +125,29 @@
           </ul>
         </div>
         <div id="content" class="fl-right">
-          <div class="section" id="title-page">
+          <div class="section section--custom" id="title-page">
             <div class="clearfix">
               <h3 id="index" class="fl-left">Danh sách sản phẩm</h3>
               <a href="/admin/add-product.html" title="" id="add-new" class="fl-left"> Thêm mới </a>
             </div>
+            <div class="filter-wp clearfix">
+              <div class="form-s fl-right">
+                <span
+                  style="
+                    display: inline-block;
+                    background: #eee;
+                    padding: 3px;
+                    border-radius: 3px;
+                    color: #333;
+                  "
+                  >Tìm kiếm</span
+                >
+                <input type="text" name="s" id="searchInput" />
+              </div>
+            </div>
           </div>
           <div class="section" id="detail-page">
             <div class="section-detail">
-              <div class="filter-wp clearfix">
-                <div class="form-s fl-right">
-                  <span
-                    style="
-                      display: inline-block;
-                      background: #eee;
-                      padding: 3px;
-                      border-radius: 3px;
-                      color: #333;
-                    "
-                    >Tìm kiếm</span
-                  >
-                  <input type="text" name="s" id="searchInput" />
-                </div>
-              </div>
-              <div class="actions">
-                <form method="GET" action="" class="form-actions">
-                  <select name="actions">
-                    <option value="0">Tác vụ</option>
-                    <option value="1">Còn hàng</option>
-                    <option value="1">Hết hàng</option>
-                    <option value="2">Ngưng bán</option>
-                  </select>
-                  <input type="submit" name="sm_action" value="Áp dụng" />
-                </form>
-              </div>
               <div class="table-responsive">
                 <table class="table list-table-wp" id="listProductTable">
                   <thead>

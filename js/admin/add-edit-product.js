@@ -3,15 +3,53 @@ import productApi from '../api/productsApi'
 import { hideSpinner, showSpinner, toast } from '../utils'
 import { initFormProduct } from '../utils/add-edit-product'
 
-async function handleSubmitForm(formValues) {
+function removeUnsedFields(formValues) {
+  const payload = { ...formValues }
+  payload['thumb'] = ''
+  if (payload.image?.name) {
+    payload.thumb = payload.image.name
+  } else {
+    payload.thumb = payload.imageUrl
+  }
+  delete payload.image
+  delete payload.imageUrl
+  return payload
+}
+
+async function handleSubmitForm(form, formValues) {
+  const formData = new FormData(form)
+  const payload = removeUnsedFields(formValues)
+  const imageNameUpload = formData.get('image')?.name
   try {
-    ;['timer'].forEach((name) => (formValues[name] = new Date().getTime()))
+    ;['timer'].forEach((name) => (payload[name] = new Date().getTime()))
     let saveProduct = null
     if (formValues.id) {
-      saveProduct = formValues.id
-      await productApi.update(formValues)
+      saveProduct = payload.id
+      await productApi.update(payload)
+      if (imageNameUpload) {
+        const response = await fetch('http://localhost:3005/upload', {
+          method: 'POST',
+          body: formData,
+        })
+        if (response.ok) {
+          const result = await response.json()
+          toast.success(result.message)
+        } else {
+          console.error('Upload failed')
+        }
+      }
     } else {
-      await productApi.add(formValues)
+      await productApi.add(payload)
+      const response = await fetch('http://localhost:3005/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      if (response.ok) {
+        const result = await response.json()
+        toast.success(result.message)
+      } else {
+        console.error('Upload failed')
+      }
     }
     saveProduct !== null
       ? toast.success('Chỉnh sửa thành công')
@@ -42,6 +80,20 @@ async function registerListCategory({ idSelect, defaultValues }) {
     console.log('failed to fetch data', error)
   }
 }
+function registerStatusProduct({ idSelect, defaultValues }) {
+  const selectEl = document.getElementById(idSelect)
+  if (!selectEl) return
+  const optionList = selectEl.querySelectorAll('option')
+  try {
+    ;[...optionList].forEach((option) => {
+      if (+option.value === +defaultValues?.status) {
+        option.selected = 'selected'
+      }
+    })
+  } catch (error) {
+    console.log('failed to fetch data', error)
+  }
+}
 ;(async () => {
   const searchParams = new URLSearchParams(window.location.search)
   const idProduct = +searchParams.get('id')
@@ -57,11 +109,16 @@ async function registerListCategory({ idSelect, defaultValues }) {
         discount: 0,
         thumb: '',
         content: '',
+        status: 1,
         quantity: 0,
       }
   hideSpinner()
   registerListCategory({
     idSelect: 'category',
+    defaultValues,
+  })
+  registerStatusProduct({
+    idSelect: 'status',
     defaultValues,
   })
   initFormProduct({

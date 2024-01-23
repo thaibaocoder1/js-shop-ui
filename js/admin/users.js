@@ -1,4 +1,5 @@
 import userApi from '../api/userApi'
+import diacritics from 'diacritics'
 import { hideSpinner, initSearchInput, showSpinner } from '../utils'
 
 async function renderListUser({ idTable, idBreadcrumb }) {
@@ -34,11 +35,34 @@ async function renderListUser({ idTable, idBreadcrumb }) {
     console.log('failed to fetch data', error)
   }
 }
+async function handleFilterChange(value, tbodyEl) {
+  const users = await userApi.getAll()
+  const userApply = users.filter((user) =>
+    diacritics.remove(user?.fullname.toLowerCase()).includes(value.toLowerCase()),
+  )
+  tbodyEl.innerHTML = ''
+  userApply?.forEach((item, index) => {
+    const tableRow = document.createElement('tr')
+    tableRow.innerHTML = `<td><input type="checkbox" name="checkItem" class="checkItem" /></td>
+      <td><span class="tbody-text">${index + 1}</span></td>
+      <td><span class="tbody-text">${item.id}</span></td>
+      <td><span class="tbody-text">${item.fullname}</span></td>
+      <td><span class="tbody-text">${item.username}</span></td>
+      <td><span class="tbody-text">${item.phone}</span></td>
+      <td><span class="tbody-text">${item.email}</span></td>
+      <td><span class="tbody-text">${+item.roleID === 1 ? 'Khách hàng' : 'Admin'}</span></td>
+      <td>
+        <button class="btn btn-primary" data-id="${item.id}" id="editUser">Chỉnh sửa</button>
+      </td>`
+    tbodyEl.appendChild(tableRow)
+  })
+}
 // main
 ;(() => {
   initSearchInput({
     idElement: 'searchInput',
     idTable: 'listUserTable',
+    onChange: handleFilterChange,
   })
   renderListUser({
     idTable: 'listUserTable',

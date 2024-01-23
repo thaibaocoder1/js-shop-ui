@@ -32,10 +32,14 @@ async function renderListProduct({ selector, selectorCount }) {
           (item.price * (100 - Number.parseInt(item.discount))) / 100,
         )}</span>
         <span class="old">${formatCurrencyNumber(item.price)}</span>
-      </div>
-      <div class="action clearfix">
-        <a href="/cart.html" title="Thêm giỏ hàng" class="add-cart fl-left">Thêm giỏ hàng</a>
-        <a href="/checkout.html" title="Mua ngay" class="buy-now fl-right">Mua ngay</a>
+    </div>
+      <div class="action clearfix action--custom">
+        ${
+          Number.parseInt(item.quantity) > 0 && Number.parseInt(item.status) === 1
+            ? `<a href="/cart.html" title="Thêm giỏ hàng" class="add-cart fl-left">Thêm giỏ hàng</a>
+        <a title="Mua ngay" class="buy-now fl-right">Mua ngay</a>`
+            : `<span>Hết hàng</span>`
+        }
       </div>`
       ulElement.appendChild(liElement)
     })

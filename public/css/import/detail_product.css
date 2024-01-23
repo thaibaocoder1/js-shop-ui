@@ -191,3 +191,47 @@
   margin-top: 10px;
   margin-left: auto;
 }
+/* Style for comment box */
+.comment-product-wp {
+  width: 100%;
+}
+.comment-product-wp textarea {
+  width: 100%;
+  display: block;
+  min-height: 100px;
+  resize: none;
+  font-family: inherit;
+}
+.comments {
+  background-color: #eee;
+  margin: 10px 0;
+}
+.comment-item {
+  padding: 5px;
+  display: flex;
+  gap: 0 10px;
+  border: 1px solid #ccc;
+}
+.comment-thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.comment-thumb .comment-img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.comment-top {
+  display: flex;
+  align-items: center;
+  gap: 0 10px;
+}
+.comment-top .comment-date {
+  color: #333;
+  font-size: 12px;
+}

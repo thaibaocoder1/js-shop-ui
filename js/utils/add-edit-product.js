@@ -8,7 +8,7 @@ function setFormValues(form, defaultValues) {
   setFieldValue(form, "input[name='quantity']", defaultValues?.quantity)
   setFieldValue(form, "input[name='description']", defaultValues?.description)
   setFieldValue(form, "textarea[name='content']", defaultValues?.content)
-  setFieldValue(form, "input[name='thumb']", `${defaultValues?.thumb}`)
+  setFieldValue(form, "input[name='imageUrl']", `${defaultValues?.thumb}`)
   if (defaultValues?.id) {
     setBackgroundImage(form, 'img#imageUrl', `/public/images/${defaultValues?.thumb}`)
   }
@@ -67,7 +67,7 @@ function initUploadImage(form) {
     const files = e.target.files[0]
     if (files) {
       const imageUrl = URL.createObjectURL(files)
-      setFieldValue(form, "input[name='thumb']", `${imageUrl}`)
+      setFieldValue(form, "input[name='imageUrl']", `${imageUrl}`)
       setBackgroundImage(form, 'img#imageUrl', `${imageUrl}`)
     }
   })
@@ -107,7 +107,7 @@ export function initFormProduct({ idForm, defaultValues, onSubmit }) {
     formValues.id = defaultValues.id
     const isValid = await validateAdminForm(form, formValues)
     if (!isValid) return
-    await onSubmit?.(formValues)
+    await onSubmit?.(form, formValues)
     isSubmitting = true
   })
 }

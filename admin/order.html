@@ -125,40 +125,26 @@
           </ul>
         </div>
         <div id="content" class="fl-right">
-          <div class="section" id="title-page">
+          <div class="section section--custom" id="title-page">
             <div class="clearfix">
               <h3 id="index" class="fl-left">Danh sách đơn hàng</h3>
+            </div>
+            <div class="form-s fl-right">
+              <span
+                style="
+                  display: inline-block;
+                  background: #eee;
+                  padding: 3px;
+                  border-radius: 3px;
+                  color: #333;
+                "
+                >Tìm kiếm</span
+              >
+              <input type="text" name="s" id="searchInput" />
             </div>
           </div>
           <div class="section" id="detail-page">
             <div class="section-detail">
-              <div class="filter-wp clearfix">
-                <div class="form-s fl-right">
-                  <span
-                    style="
-                      display: inline-block;
-                      background: #eee;
-                      padding: 3px;
-                      border-radius: 3px;
-                      color: #333;
-                    "
-                    >Tìm kiếm</span
-                  >
-                  <input type="text" name="s" id="searchInput" />
-                </div>
-              </div>
-              <div class="actions">
-                <form method="GET" action="" class="form-actions">
-                  <select name="actions">
-                    <option value="0">Tác vụ</option>
-                    <option value="1">Chờ xét duyệt</option>
-                    <option value="2">Đã xác nhận + vận chuyển</option>
-                    <option value="3">Đã thanh toán</option>
-                    <option value="4">Đã huỷ</option>
-                  </select>
-                  <input type="submit" name="sm_action" value="Áp dụng" />
-                </form>
-              </div>
               <div class="table-responsive">
                 <table class="table list-table-wp" id="listOrderTable">
                   <thead>

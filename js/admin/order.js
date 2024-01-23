@@ -1,6 +1,7 @@
 import orderApi from '../api/orderApi'
-import { showSpinner, hideSpinner } from '../utils'
+import { showSpinner, hideSpinner, initSearchInput } from '../utils'
 import dayjs from 'dayjs'
+import diacritics from 'diacritics'
 
 async function renderListOrder({ idElement }) {
   const table = document.getElementById(idElement)
@@ -33,8 +34,39 @@ async function renderListOrder({ idElement }) {
     console.log('failed to fetch data', error)
   }
 }
+async function handleFilterChange(value, tbodyEl) {
+  const orders = await orderApi.getAll()
+  const orderApply = orders.filter((order) =>
+    diacritics.remove(order?.fullname.toLowerCase()).includes(value.toLowerCase()),
+  )
+  tbodyEl.innerHTML = ''
+  orderApply?.forEach((item, index) => {
+    const tableRow = document.createElement('tr')
+    tableRow.innerHTML = `<td><input type="checkbox" name="checkItem" class="checkItem" /></td>
+    <td><span class="tbody-text">${index + 1}</span></td>
+    <td><span class="tbody-text">${item.id}</span></td>
+    <td><span class="tbody-text">${item.fullname}</span></td>
+    <td><span class="tbody-text">${item.email}</span></td>
+    <td><span class="tbody-text">${item.phone}</span></td>
+    <td><span class="tbody-text">${dayjs(item.orderDate).format('DD/MM/YYYY')}</span></td>
+    <td><span class="tbody-text">${item.userID}</span></td>
+    <td>
+      <button class="btn btn-primary" id="viewOrder" data-id="${item.id}">Chi tiết</button>
+      <button class="btn btn-info" id="editOrder" ${+item.status === 4 ? 'hidden' : ''} data-id="${
+      item.id
+    }">Chỉnh sửa</button>
+    </td>`
+    tbodyEl.appendChild(tableRow)
+  })
+}
+
 // main
 ;(() => {
+  initSearchInput({
+    idElement: 'searchInput',
+    idTable: 'listOrderTable',
+    onChange: handleFilterChange,
+  })
   renderListOrder({
     idElement: 'listOrderTable',
   })

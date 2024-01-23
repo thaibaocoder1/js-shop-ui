@@ -221,3 +221,32 @@
 .is-hide {
   display: none;
 }
+/* Search */
+.search-wrapper {
+  position: relative;
+}
+.search {
+  background-color: #fff;
+  border-radius: 0 0 2px 2px;
+  box-shadow: 0 0 4px 6px rgba(0, 0, 0, 0.03);
+  width: 493px;
+  position: absolute;
+  z-index: 10;
+}
+.search-item {
+  display: flex;
+  gap: 0 10px;
+  padding: 5px;
+}
+.search-item + .search-item {
+  border-bottom: 1px solid #ccc;
+}
+.search-thumb {
+  width: 60px;
+  aspect-ratio: 1 / 1;
+}
+.search-thumb .search-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 0 0 2px 2px;
+}

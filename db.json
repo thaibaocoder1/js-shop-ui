@@ -36,53 +36,9 @@
       "timer": 1705315724935
     }
   ],
-  "comments": [
-    {
-      "id": 1,
-      "userID": "2",
-      "text": "a comment about post 1",
-      "productID": 1
-    },
-    {
-      "id": "2",
-      "userID": "2",
-      "text": "another comment about post 1",
-      "productID": 1
-    }
-  ],
-  "order": [
-    {
-      "fullname": "Hoàng Bảo",
-      "email": "baohoang@gmail.com",
-      "address": "https://www.google.com/maps?q=10.8033121,106.6386977",
-      "phone": "0852343047",
-      "note": "",
-      "userID": 1,
-      "orderDate": 1705905470808,
-      "status": 4,
-      "id": 1
-    }
-  ],
-  "orderDetails": [
-    {
-      "productID": 1,
-      "quantity": 1,
-      "userID": 1,
-      "isChecked": true,
-      "price": 8900100,
-      "orderID": 1,
-      "id": 1
-    },
-    {
-      "productID": 2,
-      "quantity": 1,
-      "userID": 1,
-      "isChecked": true,
-      "price": 7992000,
-      "orderID": 1,
-      "id": 2
-    }
-  ],
+  "comments": [],
+  "order": [],
+  "orderDetails": [],
   "products": [
     {
       "id": 1,
@@ -94,9 +50,9 @@
       "discount": "1",
       "thumb": "img-pro-16.png",
       "content": "<p>San pham 1</p>\n",
-      "status": 1,
-      "quantity": 250,
-      "timer": 1705472234347
+      "status": "1",
+      "quantity": "250",
+      "timer": 1705935555191
     },
     {
       "id": 2,
@@ -137,7 +93,7 @@
       "thumb": "img-pro-13.png",
       "content": "<p>San pham 4</p>\n",
       "status": 1,
-      "quantity": 200,
+      "quantity": 199,
       "timer": 1705416477743
     },
     {
@@ -250,7 +206,7 @@
       "content": "<p>Sản phẩm 6</p>\n",
       "status": 1,
       "quantity": 200,
-      "timer": 1705416691989
+      "timer": 1705416692009
     },
     {
       "id": 13,
@@ -385,7 +341,7 @@
       "password": "123456789",
       "password_confirmation": "123456789",
       "roleID": "2",
-      "imageUrl": "https://picsum.photos/id/625/300/300",
+      "imageUrl": "https://picsum.photos/id/649/300/300",
       "id": 2
     }
   ],
@@ -398,5 +354,6 @@
       "id": 2,
       "title": "Admin"
     }
-  ]
+  ],
+  "images": []
 }

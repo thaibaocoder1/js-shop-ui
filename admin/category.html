@@ -125,12 +125,25 @@
           </ul>
         </div>
         <div id="content" class="fl-right">
-          <div class="section" id="title-page">
+          <div class="section section--custom" id="title-page">
             <div class="clearfix">
               <h3 id="index" class="fl-left">Danh mục sản phẩm</h3>
               <a href="/admin/add-category.html" title="" id="add-new" class="fl-left">
                 Thêm mới
               </a>
+            </div>
+            <div class="form-s fl-right">
+              <span
+                style="
+                  display: inline-block;
+                  background: #eee;
+                  padding: 3px;
+                  border-radius: 3px;
+                  color: #333;
+                "
+                >Tìm kiếm</span
+              >
+              <input type="text" name="s" id="searchInput" />
             </div>
           </div>
           <div class="section" id="detail-page">
@@ -141,19 +154,6 @@
                     <a id="breadcrumbCategory" href="">Tất cả <span class="count">(0)</span></a>
                   </li>
                 </ul>
-                <div class="form-s fl-right">
-                  <span
-                    style="
-                      display: inline-block;
-                      background: #eee;
-                      padding: 3px;
-                      border-radius: 3px;
-                      color: #333;
-                    "
-                    >Tìm kiếm</span
-                  >
-                  <input type="text" name="s" id="searchInput" />
-                </div>
               </div>
               <div class="table-responsive">
                 <table class="table list-table-wp" id="listCategoryTable">

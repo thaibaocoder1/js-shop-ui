@@ -79,7 +79,7 @@
         </div>
       </div>
     </div>
-    <div id="main-content-wp" class="list-post-page">
+    <div id="main-content-wp" class="add-cat-page">
       <div class="wrap clearfix">
         <div id="sidebar" class="fl-left">
           <ul id="sidebar-menu">
@@ -125,43 +125,21 @@
           </ul>
         </div>
         <div id="content" class="fl-right">
-          <div class="section section--custom" id="title-page">
+          <div class="section" id="title-page">
             <div class="clearfix">
-              <h3 id="index" class="fl-left">Danh sách bình luận</h3>
-            </div>
-            <div class="form-s fl-right">
-              <span
-                style="
-                  display: inline-block;
-                  background: #eee;
-                  padding: 3px;
-                  border-radius: 3px;
-                  color: #333;
-                "
-                >Tìm kiếm</span
-              >
-              <input type="text" name="s" id="searchInput" />
+              <h3 id="index" class="fl-left">Chỉnh sửa bình luận</h3>
             </div>
           </div>
           <div class="section" id="detail-page">
             <div class="section-detail">
-              <div class="table-responsive">
-                <table class="table list-table-wp" id="listComment">
-                  <thead>
-                    <tr>
-                      <td><input type="checkbox" name="checkAll" id="checkAll" /></td>
-                      <td><span class="thead-text">STT</span></td>
-                      <td><span class="thead-text">Mã bình luận</span></td>
-                      <td><span class="thead-text">Nội dung</span></td>
-                      <td><span class="thead-text">Ngày bình luận</span></td>
-                      <td><span class="thead-text">Sản phẩm bình luận</span></td>
-                      <td><span class="thead-text">Mã khách hàng</span></td>
-                      <td colspan="2"><span class="thead-text">Thao tác</span></td>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
+              <form novalidate id="formComment">
+                <div class="input-group">
+                  <label for="text">Nội dung</label>
+                  <input type="text" name="text" id="text" value="" />
+                  <span class="invalid-feedback"></span>
+                </div>
+                <button type="submit" name="submit" id="btn-submit">Cập nhật</button>
+              </form>
             </div>
           </div>
         </div>
@@ -173,6 +151,6 @@
       </div>
     </div>
     <script type="module" src="/js/admin/home.js"></script>
-    <script type="module" src="/js/admin/comment.js"></script>
+    <script type="module" src="/js/admin/edit-comment.js"></script>
   </body>
 </html>

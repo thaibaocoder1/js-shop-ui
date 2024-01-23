@@ -77,6 +77,7 @@ form#formProduct {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  margin-left: -10px;
 }
 .grid-layout {
   display: grid;
@@ -91,7 +92,20 @@ form#formProduct {
   display: block;
 }
 form#formProduct > .input-group {
-  width: 50%;
+  width: calc(50% - 10px);
+  margin-left: 10px;
+}
+form#formProduct > .input-group:last-child {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+form#formProduct > .input-group #imageUrl {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
 }
 form#formProduct > .input-group input {
   width: 90% !important;
@@ -108,4 +122,14 @@ form#formProduct > .input-group input {
   display: flex;
   align-items: center;
   gap: 0 15px;
+}
+.section--custom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.textarea--custom {
+  width: 100%;
+  padding: 5rem;
 }

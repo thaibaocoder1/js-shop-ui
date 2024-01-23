@@ -1,4 +1,6 @@
 import productApi from './api/productsApi'
+import commentApi from './api/commentApi'
+import userApi from './api/userApi'
 import {
   addCartToDom,
   addProductToCart,
@@ -10,6 +12,8 @@ import {
   sweetAlert,
   toast,
 } from './utils'
+import { initProductComment } from './utils'
+import dayjs from 'dayjs'
 
 async function renderDetailProduct({
   boxIDRight,
@@ -46,12 +50,14 @@ async function renderDetailProduct({
           ? 'Đợi nhập hàng'
           : Number.parseInt(data.quantity) <= 20 && Number.parseInt(data.status) === 1
           ? 'Sắp hết hàng'
+          : Number.parseInt(data.quantity) > 0 && Number.parseInt(data.status) === 0
+          ? 'Ngưng bán'
           : 'Còn hàng'
       }</span>
     </div>
     <div class="num-product">
       <span class="title">Số lượng: </span>
-      <span>${data.quantity} sản phẩm</span>
+      <span>${Number.parseInt(data.status) === 0 ? '0' : data.quantity} sản phẩm</span>
     </div>
     <p class="price">${formatCurrencyNumber(
       (data.price * (100 - Number.parseInt(data.discount))) / 100,
@@ -61,13 +67,9 @@ async function renderDetailProduct({
       <input type="text" value="1" data-quantity="1" name="num-order" id="num-order" />
       <span id="plus"><i class="fa fa-plus"></i></span>
     </div>
-    <a href="/cart.html" data-id=${data.id} title="Thêm giỏ hàng" class="add-cart" "${
-      Number.parseInt(data.quantity) === 0
-        ? Number.parseInt(data.status) === 0 || Number.parseInt(data.status) === 1
-          ? 'hidden'
-          : ''
-        : ''
-    }">Thêm giỏ hàng</a>`
+    <button data-id=${data.id} title="Thêm giỏ hàng" class="add-cart" ${
+      Number.parseInt(data.quantity) > 0 && Number.parseInt(data.status) === 1 ? '' : 'disabled'
+    }>Thêm giỏ hàng</button>`
     infoProductDesc.innerHTML = `<p>${data.description}</p>`
     // fetch list product same category
     await renderListProductSameCategory({
@@ -117,6 +119,62 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
     console.log('failed to fetch data', error)
   }
 }
+
+async function renderListComment({ idElement, productID }) {
+  const commentList = document.getElementById(idElement)
+  if (!commentList) return
+  commentList.textContent = ''
+  try {
+    showSpinner()
+    const comments = await commentApi.getAll()
+    hideSpinner()
+    const commentApply = comments.filter((comment) => +comment.productID === productID)
+    const commentSort = commentApply.sort((a, b) => b.id - a.id)
+    commentSort?.forEach(async (item) => {
+      const commentItem = document.createElement('div')
+      commentItem.classList.add('comment-item')
+      const userInfo = await userApi.getById(item.userID)
+      commentItem.innerHTML = `<figure class="comment-thumb">
+        <img
+          src="${userInfo?.imageUrl}"
+          alt="${userInfo?.username}"
+          class="comment-img"
+        />
+      </figure>
+      <div class="comment-content">
+        <div class="comment-top">
+          <h3 class="comment-author">${userInfo?.username}</h3>
+          <time class="comment-date">${dayjs(item?.createdAt).format('DD/MM/YYYY HH:mm:ss')}</time>
+        </div>
+        <p class="comment-desc">${item?.text}</p>
+      </div>`
+      commentList.appendChild(commentItem)
+    })
+  } catch (error) {
+    console.log('failed to fetch data', error)
+  }
+}
+
+async function handleOnSubmitForm(value, productID, userID) {
+  try {
+    const data = {
+      productID,
+      userID,
+      text: value,
+      createdAt: new Date().getTime(),
+    }
+    showSpinner()
+    const addComment = await commentApi.add(data)
+    hideSpinner()
+    if (addComment) toast.success('Bình luận thành công')
+    setTimeout(() => {
+      window.location.assign(`/product-detail.html?id=${productID}`)
+    }, 500)
+  } catch (error) {
+    toast.error('Có lỗi trong khi xử lý')
+  }
+}
+
 // main
 ;(() => {
   let cart = localStorage.getItem('cart') !== null ? JSON.parse(localStorage.getItem('cart')) : []
@@ -165,6 +223,16 @@ async function renderListProductSameCategory({ idElement, swiperWrapper, categor
     boxIDLeft: 'infoProductLeft',
     boxIDDesc: 'infoProductDesc',
     breadcrumbTitle: 'breadcrumb-title',
+    productID,
+  })
+  initProductComment({
+    idForm: 'formComment',
+    infoUserStorage,
+    productID,
+    onSubmit: handleOnSubmitForm,
+  })
+  renderListComment({
+    idElement: 'comments',
     productID,
   })
   // event delegations

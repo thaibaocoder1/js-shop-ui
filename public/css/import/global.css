@@ -150,4 +150,8 @@ iframe {
 #same-category-wp .owl-controls .owl-buttons div.owl-prev {
   right: 25px;
 }
-/* spinner */
+.action--custom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

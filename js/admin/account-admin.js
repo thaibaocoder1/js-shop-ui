@@ -29,11 +29,8 @@ async function renderRoles({ idElement, idAccount }) {
     const roles = await roleApi.getAll()
     hideSpinner()
     roles.forEach((role) => {
-      const optionEl = document.createElement('option')
       if (+role.id === idAccount) {
-        optionEl.selected = 'selected'
-        optionEl.innerHTML = `<option value="${role.id}">${role.title}</option>`
-        element.appendChild(optionEl)
+        element.value = `${role.title}`
       }
     })
   } catch (error) {

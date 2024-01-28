@@ -51,8 +51,8 @@
       "thumb": "img-pro-16.png",
       "content": "<p>San pham 1</p>\n",
       "status": "1",
-      "quantity": "250",
-      "timer": 1705935555191
+      "quantity": 10,
+      "timer": 1706266589492
     },
     {
       "id": 2,
@@ -65,7 +65,7 @@
       "thumb": "img-pro-15.png",
       "content": "<p>San pham 2</p>\n",
       "status": 1,
-      "quantity": 200,
+      "quantity": 2,
       "timer": 1705416362854
     },
     {
@@ -79,7 +79,7 @@
       "thumb": "img-pro-14.png",
       "content": "<p>San pham 3</p>\n",
       "status": 1,
-      "quantity": 200,
+      "quantity": 198,
       "timer": 1705416469093
     },
     {

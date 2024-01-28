@@ -252,3 +252,7 @@
   border-radius: 0 0 2px 2px;
   flex-shrink: 0;
 }
+.is-out-quantity {
+  background: #ef5350;
+  color: #fff;
+}

@@ -74,10 +74,45 @@ a {
 }
 form#formProduct {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
   margin-left: -10px;
+  gap: 0 20px;
+  padding: 0 10px;
+}
+form#formProduct .form-right,
+form#formProduct .form-left {
+  width: 49%;
+}
+form#formProduct .form-right .input-group {
+  width: calc(100% - 10px);
+  margin-left: 10px;
+}
+form#formProduct .form-right .form-right-inner {
+  display: flex;
+}
+form#formProduct .form-right .form-right-inner .input-group {
+  width: 49%;
+}
+form#formProduct .form-right .form-right-inner .input-group input,
+form#formProduct .form-right .form-right-inner .input-group select {
+  width: 100%;
+  display: block;
+}
+form#formProduct .form-right > .input-group:last-child {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+form#formProduct .form-right > .input-group #imageUrl {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+form#formProduct .form-right > .input-group input {
+  width: 100% !important;
+  display: block;
 }
 .grid-layout {
   display: grid;
@@ -91,26 +126,7 @@ form#formProduct {
   width: 100% !important;
   display: block;
 }
-form#formProduct > .input-group {
-  width: calc(50% - 10px);
-  margin-left: 10px;
-}
-form#formProduct > .input-group:last-child {
-  margin-top: 10px;
-  display: flex;
-  justify-content: flex-end;
-}
-form#formProduct > .input-group #imageUrl {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-  display: block;
-  margin: 0 auto;
-}
-form#formProduct > .input-group input {
-  width: 90% !important;
-  display: block;
-}
+
 .btn--style {
   color: #fff;
   border: none;

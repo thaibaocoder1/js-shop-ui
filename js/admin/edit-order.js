@@ -1,24 +1,17 @@
 import orderApi from '../api/orderApi'
 import orderDetailApi from '../api/orderDetailApi'
 import productApi from '../api/productsApi'
-import { showSpinner, hideSpinner, setFieldValue, setFieldError, toast } from '../utils'
+import { showSpinner, hideSpinner, setFieldError, toast } from '../utils'
 import * as yup from 'yup'
-import dayjs from 'dayjs'
-
-function setFormValues(form, orderInfo) {
-  if (!form || !orderInfo) return
-  setFieldValue(form, "[name='fullname']", orderInfo?.fullname)
-  setFieldValue(form, "[name='email']", orderInfo?.email)
-  setFieldValue(form, "[name='address']", orderInfo?.address)
-  setFieldValue(form, "[name='phone']", orderInfo?.phone)
-  setFieldValue(form, "[name='note']", orderInfo?.note)
-}
 
 function registerStatusOrder(selectEl, status) {
-  const tagArr = ['Chờ xác nhận', 'Đã xác nhận + vận chuyển', 'Đã nhận hàng', 'Đã huỷ']
+  let tagArr = ['Chờ xác nhận', 'Đã xác nhận + vận chuyển', 'Đã nhận hàng', 'Đã huỷ']
   for (let i = 0; i < tagArr.length; ++i) {
     const optionEl = document.createElement('option')
     optionEl.value = i + 1
+    if (status !== 1 && i === 0) {
+      optionEl.disabled = true
+    }
     if (+optionEl.value === status) {
       optionEl.selected = true
     }
@@ -39,33 +32,13 @@ function getFormValues(form) {
 
 function getFormSchema() {
   return yup.object({
-    fullname: yup
-      .string()
-      .required('Không được để trống trường này')
-      .test(
-        'at-least-two-words',
-        'Tên đầy đủ phải tối thiểu 3 từ',
-        (value) => value.split(' ').filter((x) => !!x && x.length >= 2).length >= 2,
-      ),
-    email: yup
-      .string()
-      .email('Trường này phải là email')
-      .required('Không được để trống trường này'),
-    address: yup.string().required('Không được để trống trường này'),
-    phone: yup
-      .string()
-      .required('Không được để trống trường này')
-      .matches(/^(84|0[3|5|7|8|9])+([0-9]{8})$/, 'Số điện thoại không hợp lệ'),
-    note: yup.string(),
     status: yup.string(),
   })
 }
 
 async function handleValidationForm(form, formValues) {
   try {
-    ;['fullname', 'email', 'address', 'phone', 'note', 'status'].forEach((name) =>
-      setFieldError(form, name, ''),
-    )
+    ;['status'].forEach((name) => setFieldError(form, name, ''))
     const schema = getFormSchema()
     await schema.validate(formValues, {
       abortEarly: false,
@@ -92,7 +65,6 @@ async function displayOrderInfo({ idForm, orderID, onSubmit }) {
     showSpinner()
     const orderInfo = await orderApi.getById(orderID)
     hideSpinner()
-    setFormValues(form, orderInfo)
     registerStatusOrder(selectEl, +orderInfo.status)
     form.addEventListener('submit', async (e) => {
       e.preventDefault()

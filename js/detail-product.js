@@ -43,7 +43,7 @@ async function renderDetailProduct({
       <p>${data.description}</p>
     </div>
     <div class="num-product">
-      <span class="title">Sản phẩm: </span>
+      <span class="title">Trạng thái: </span>
       <span class="status">${
         Number.parseInt(data.quantity) === 0 && Number.parseInt(data.status) === 0
           ? 'Ngưng bán'

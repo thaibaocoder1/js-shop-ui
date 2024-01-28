@@ -27,6 +27,7 @@ function displayProductInCart({ idTable, idTotalPrice, cart, userID }) {
         totalPrice +=
           ((product.price * (100 - Number.parseInt(product.discount))) / 100) * item.quantity
         const tableRow = document.createElement('tr')
+        tableRow.dataset.id = +item.productID
         tableRow.classList.add('cart-item')
         tableRow.innerHTML = `<td class="product-name">${
           product.name
@@ -45,11 +46,34 @@ function displayProductInCart({ idTable, idTotalPrice, cart, userID }) {
   }
 }
 async function handleAddOrder(orderID, formValues, cart) {
+  let isOrder = true
+  let isFlag = false
+  const errorLog = {}
   const orderData = await orderApi.add(formValues)
   orderID = orderData.id
-  for (const item of cart) {
-    if (item.isChecked || item.isBuyNow) {
-      const product = await productApi.getById(item.productID)
+  let cartApply = cart.filter((item) => item.isChecked || item.isBuyNow)
+  for (const item of cartApply) {
+    const product = await productApi.getById(item.productID)
+    const remainingQuantity = +product.quantity
+    isOrder = item.quantity > remainingQuantity ? false : true
+    if (isOrder === false) {
+      isFlag = true
+      errorLog['product'] = product
+    }
+  }
+  if (isFlag) {
+    toast.error(
+      `Sản phẩm ${errorLog?.product.name} chỉ còn ${errorLog?.product.quantity}. Vui lòng kiểm tra lại số lượng`,
+    )
+    const tableRow = document.querySelector(
+      `#tableCheckout tbody tr[data-id='${errorLog?.product.id}']`,
+    )
+    if (tableRow) {
+      tableRow.classList.add('is-out-quantity')
+      await orderApi.delete(orderID)
+    }
+  } else {
+    for (const item of cartApply) {
       item['orderID'] = orderID
       item['price'] = (product.price * (100 - Number.parseInt(product.discount))) / 100
       const payload = {
@@ -60,9 +84,11 @@ async function handleAddOrder(orderID, formValues, cart) {
       await orderDetailApi.add(item)
     }
   }
+  return isOrder
 }
 async function handleCheckoutFormSubmit(formValues, userID, cart) {
   let orderID = null
+  let isOrder = null
   try {
     formValues['userID'] = userID
     formValues['orderDate'] = new Date().getTime()
@@ -70,22 +96,24 @@ async function handleCheckoutFormSubmit(formValues, userID, cart) {
     const listOrder = await orderApi.getAll()
     if (Array.isArray(listOrder)) {
       if (listOrder.length === 0) {
-        await handleAddOrder(orderID, formValues, cart)
+        isOrder = await handleAddOrder(orderID, formValues, cart)
         orderID = null
       } else if (listOrder.length > 0) {
-        await handleAddOrder(orderID, formValues, cart)
+        isOrder = await handleAddOrder(orderID, formValues, cart)
         orderID = null
       }
     }
-    const newCart = cart.filter((item) => {
-      if (item.userID === userID && (item.isChecked || item.isBuyNow)) return false
-      return true
-    })
-    toast.success('Thanh toán thành công')
-    localStorage.setItem('cart', JSON.stringify(newCart))
-    setTimeout(() => {
-      window.location.assign('/order.html')
-    }, 2000)
+    if (isOrder) {
+      const newCart = cart.filter((item) => {
+        if (item.userID === userID && (item.isChecked || item.isBuyNow)) return false
+        return true
+      })
+      toast.success('Thanh toán thành công')
+      localStorage.setItem('cart', JSON.stringify(newCart))
+      setTimeout(() => {
+        window.location.assign('/order.html')
+      }, 2000)
+    }
   } catch (error) {
     console.log('failed to checkout', error)
   }

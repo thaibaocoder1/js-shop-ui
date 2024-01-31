@@ -36,9 +36,83 @@
       "timer": 1705315724935
     }
   ],
-  "comments": [],
-  "order": [],
-  "orderDetails": [],
+  "comments": [
+    {
+      "productID": 2,
+      "userID": 1,
+      "text": "San pham dep",
+      "createdAt": 1706521261453,
+      "id": 1
+    }
+  ],
+  "order": [
+    {
+      "fullname": "Hoàng Bảo",
+      "email": "baohoang@gmail.com",
+      "address": "https://www.google.com/maps?q=10.853346,106.626307",
+      "phone": "0852343047",
+      "note": "",
+      "userID": 1,
+      "orderDate": 1706521100986,
+      "status": 1,
+      "id": 1
+    },
+    {
+      "fullname": "Hoàng Bảo",
+      "email": "baohoang@gmail.com",
+      "address": "https://www.google.com/maps?q=10.853346,106.626307",
+      "phone": "0852343047",
+      "note": "",
+      "userID": 1,
+      "orderDate": 1706521107307,
+      "status": 1,
+      "id": 2
+    },
+    {
+      "fullname": "Hoàng Bảo",
+      "email": "baohoang@gmail.com",
+      "address": "https://www.google.com/maps?q=10.853346,106.626307",
+      "phone": "0852343047",
+      "note": "",
+      "userID": 1,
+      "orderDate": 1706521170037,
+      "status": 1,
+      "id": 3
+    },
+    {
+      "fullname": "Hoàng Bảo",
+      "email": "baohoang@gmail.com",
+      "address": "https://www.google.com/maps?q=10.853346,106.626307",
+      "phone": "0852343047",
+      "note": "",
+      "userID": 1,
+      "orderDate": 1706521181159,
+      "status": 1,
+      "id": 4
+    },
+    {
+      "fullname": "Hoàng Bảo",
+      "email": "baohoang@gmail.com",
+      "address": "https://www.google.com/maps?q=10.853346,106.626307",
+      "phone": "0852343047",
+      "note": "",
+      "userID": 1,
+      "orderDate": 1706521203885,
+      "status": 1,
+      "id": 5
+    }
+  ],
+  "orderDetails": [
+    {
+      "productID": 3,
+      "quantity": 2,
+      "userID": 1,
+      "isChecked": true,
+      "price": 6392000,
+      "orderID": 5,
+      "id": 1
+    }
+  ],
   "products": [
     {
       "id": 1,
@@ -79,7 +153,7 @@
       "thumb": "img-pro-14.png",
       "content": "<p>San pham 3</p>\n",
       "status": 1,
-      "quantity": 198,
+      "quantity": 196,
       "timer": 1705416469093
     },
     {
